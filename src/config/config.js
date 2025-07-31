@@ -1,0 +1,1 @@
+export const CONFIGPAGE_PW = "yes";

@@ -1,0 +1,1125 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+
+@media (min-width:320px) {
+  /* smartphones, portrait iPhone, portrait 480x320 phones (Android) */
+}
+
+@media (min-width:480px) {
+  /* smartphones, Android phones, landscape iPhone */
+}
+
+@media (min-width:600px) {
+  /* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */
+}
+
+@media (min-width:801px) {
+  /* tablet, landscape iPad, lo-res laptops ands desktops */
+}
+
+@media (min-width:1025px) {
+  /* big landscape tablets, laptops, and desktops */
+}
+
+@media (min-width:1281px) {
+  /* hi-res laptops and desktops */
+}
+
+.calculator-input {
+  text-align: left;
+  background-color: lightgray;
+  /* margin: 5px;
+  width: 80%; */
+}
+.save-btn, .cancel-btn {
+  margin: 0 2px;
+  padding: 2px 5px;
+  cursor: pointer;
+  height: 25px;
+  width: 25px;
+  font-size: 12px;
+}
+.save-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+}
+.cancel-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+}
+
+.edit-input {
+  min-width: 60px;
+  width: 100%;
+  padding: 4px;
+  font-size: 16px;
+}
+
+.cell-with-number {
+  position: relative;
+  padding-right: 30px; /* Adjust padding to make space for the small number */
+}
+
+.small-number {
+  position: absolute;
+  top: 5px; /* Adjust to place the small number at the top */
+  right: 5px; /* Adjust to position it in the upper right corner */
+  font-size: 12px; /* Adjust size of the small number */
+  border-radius: 50%; /* Make it round */
+  padding: 4px; /* Padding around the small number */
+}
+
+.main-number {
+  /* font-size: 18px; 
+  font-weight: bold;  */
+}
+
+body {
+  box-sizing: border-box;
+  color: black !important;
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+div[class="header"] {
+  width: 100%;
+  padding-bottom: 1px;
+  text-align: center;
+  background: #1a0dab;
+  color: white;
+  font-size: 30px;
+}
+
+.footer {
+  display: flex; /* Use flexbox for centering */
+  flex-direction: column; /* Stack items vertically */
+  align-items: center; /* Center items horizontally */
+  justify-content: center; /* Center items vertically */
+  margin: 20px auto; /* Center the footer horizontally */
+  padding: 10px; /* Reduce padding */
+  width: 100%; /* Ensure it spans the width */
+  font-size: 12px;
+}
+.footer-text {
+  font-size: 11px;
+  margin-top: -5px;
+}
+
+.container {
+  font-family: 'Poppins', sans-serif;
+  /* width: 92%; */
+  width: 96%;
+  max-width: 1140px;
+  padding: 0 10px;
+  margin: 0 auto;
+  margin-top: 20px;
+  text-align: center;
+}
+.containerconfig {
+  font-family: 'Poppins', sans-serif;
+  /* width: 92%; */
+  width: 96%;
+  max-width: 80%;
+  padding: 0 40px;
+  margin: 0 auto;
+  margin-top: 20px;
+  text-align: left;
+}
+.eachTimestamp{
+  all: unset;
+  width: 75px;
+  border: solid;
+  text-align: left;
+  height: 30px;
+}
+
+.delete-btn {
+  all: unset;
+}
+
+.loading {
+  margin-top: 30px;
+  text-align: center;
+}
+
+#screenshotimg {
+  margin-bottom: 20px;
+}
+
+/* Small screens (phones) */
+@media (max-width: 600px) {
+  .container {
+    padding: 5px;
+    /* Reduce padding for small screens */
+  }
+}
+
+/* Medium screens (tablets) */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .container {
+    max-width: 90%;
+  }
+}
+
+/* Large screens (desktops) */
+@media (min-width: 1025px) {
+  .container {
+    max-width: 800px;
+  }
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+}
+
+table tr.statictr {
+
+  background-color: rgba(200, 200, 200);
+}
+
+td.grayinput {
+
+  background-color: rgba(200, 200, 200, 0.2);
+}
+
+
+tr th,
+select {
+  font-size: 20px;
+  padding: 12px 5px 12px 5px;
+  border: 2px solid black;
+  text-align: center;
+  background-color: rgba(217, 221, 146, 0.2);
+  /* white-space: nowrap; */
+}
+
+.th_10percent{
+  width: 6%;
+  color: black;
+}
+
+.th_25percent{
+  width: 14%;
+  color: black;
+}
+
+tr td {
+  border: 2px solid black;
+  text-align: center;
+  /* white-space:nowrap; */
+}
+
+tr td.usercanedit {
+  background-color: yellow;
+  padding: 5px;
+  border: 2px solid black;
+  /* outline: 1px solid black;
+  outline-offset: -10px; */
+}
+
+tr.firstup {
+  background-color: rgba(255, 255, 157, 0.5);
+}
+
+input {
+  font-size: 24px;
+  background-color: transparent;
+  border: none;
+  width: 100%;
+  margin-left: -8px;
+  padding: 8px 8px;
+  font-family: 'Poppins', sans-serif;
+  outline: none;
+  text-align: center;
+}
+
+input.customtime {
+  /* float: right; */
+  width: 120px;
+}
+
+.weight {
+  width: 50px;
+  padding: 10px;
+  outline: 1px solid black;
+  outline-offset: -8px;
+  text-align: center;
+
+}
+
+button {
+  padding: 0 2.6rem;
+  background-color: #1a0dab;
+  border-radius: 8px;
+  border-style: none;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-family: "Inter UI", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  height: 4.5rem;
+  padding: 0 1.6rem;
+  text-align: center;
+  text-shadow: rgba(0, 0, 0, 0.25) 0 3px 8px;
+  transition: all .5s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+button:hover {
+  box-shadow: rgba(80, 63, 205, 0.5) 0 1px 30px;
+  transition-duration: .1s;
+}
+
+
+button.clearall {
+  all: unset;
+  float: right;
+  opacity: 0.5;
+  margin: 3px;
+  font-size: 12px;
+}
+
+section {
+  text-align: center;
+  margin: 0px 0px 23px 0px;
+  /* margin-top: 15px; */
+}
+
+button.clearall:hover {
+  all: unset;
+  float: right;
+  opacity: 1;
+  margin: 3px;
+  font-size: 12px;
+}
+
+button.expand {
+  all: unset;
+  float: left;
+  opacity: 0.5;
+  margin: 3px;
+  font-size: 16px;
+  margin-top:16px;
+
+}
+
+button.expand:hover {
+  all: unset;
+  float: left;
+  opacity: 1;
+  margin: 3px;
+  font-size: 16px;
+  margin-top:16px;
+
+}
+
+
+button.seedetails {
+  all: unset;
+  /* float: right; */
+  opacity: 0.5;
+  margin: 3px;
+  font-size: 16px;
+}
+
+button.seedetails:hover {
+  all: unset;
+  /* float: right; */
+  opacity: 1;
+  margin: 3px;
+  font-size: 16px;
+}
+
+button.explanation {
+  all: unset;
+  /* float: left; */
+  opacity: 0.6;
+  /* margin: 3px; */
+  font-size: 24px;
+  /* margin-bottom: 6px; */
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+button.explanation:hover {
+  all: unset;
+  /* float: left; */
+  opacity: 1;
+  /* margin: 3px; */
+  font-size: 24px;
+  /* margin-bottom: 6px; */
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+img.copybutton {
+  all: unset;
+  float: right;
+  width: 30px;
+  opacity: 0.5;
+  margin: 10px 10px 8px 0px;
+}
+
+img.copybutton:hover {
+  all: unset;
+  float: right;
+  width: 30px;
+  opacity: 1;
+  margin: 10px 10px 8px 0px;
+}
+
+
+img.githubbutton {
+  text-align: center;
+  width: 25px;
+  opacity: 0.5;
+  margin-top: 20px;
+}
+
+img.copybuttonjust1line {
+  all: unset;
+  float: right;
+  width: 25px;
+  opacity: 0.5;
+  margin-top: -3px;
+}
+
+
+
+img.copybuttonforcopymsg {
+  all: unset;
+  float: right;
+  width: 25px;
+  opacity: 0.5;
+}
+
+img.copybuttonforcopymsg:hover {
+  all: unset;
+  float: right;
+  width: 25px;
+  opacity: 1;
+}
+
+
+h1 {
+  font-size: 86px;
+  margin-top: -20px;
+}
+
+h2 {
+  font-size: 36px;
+  margin-top: -64px;
+  margin-bottom: 40px;
+}
+
+p {
+  font-size: 24px;
+  text-align: left;
+  margin: 5px;
+  font-size: 24px;
+}
+
+#orderofadmissions_output {
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+p[class="font 14px"] {
+  font-size: 14px;
+}
+
+p[class="admissionsordertitle"] {
+  margin-top: 32px;
+}
+
+p[class="admissionsorderlastline"] {
+  font-size: 12px;
+  text-align: center;
+}
+
+p.sorted {
+  text-align: left;
+}
+
+div.sortedWithButton {
+  width: 100%;
+}
+
+div.fieldsettocopy_min {
+  all: unset;
+  width: 50%;
+}
+
+p.bold {
+  font-weight: bold;
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+p.boldCopy {
+  font-weight: bold;
+  text-align: left;
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.bold-fields {
+  font-weight: bold;
+  color: black;
+}
+
+fieldset {
+  background-color: rgba(217, 221, 146, 0.2);
+  width: 98%;
+  margin: auto;
+  margin-bottom: 10px;
+
+  word-wrap: break-word;
+  /* Break long words */
+  word-break: break-word;
+  /* Ensure long words break */
+  white-space: normal;
+  /* Allow wrapping */
+  border: 2px solid black;
+  /* Optional: Add a border */
+  padding: 10px;
+  /* Optional: Add padding */
+}
+
+fieldset.fieldsettocopy {
+  background-color: rgba(217, 221, 146, 0.2);
+  width: 98%;
+  margin: auto;
+  margin-bottom: 10px;
+}
+
+.close {
+  float: right;
+}
+
+.analyticstable {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+.analyticsthead {
+  background-color: #e9ecef;
+}
+
+.analyticsth, .analyticstd {
+  border: 1px solid #dee2e6;
+  padding: 10px;
+  text-align: left;
+  font-size: 12px;
+}
+
+.analyticsth {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.analyticsth:hover {
+  background-color: #d6d8db;
+}
+
+.analyticstr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.analyticstr:hover {
+  background-color: #e2e6ea;
+}
+
+.analyticstd:nth-child(10) {
+  white-space: normal;
+  word-break: break-word;
+  max-width: 200px;
+}
+
+.timesdropdown {
+  /* float: right;
+  margin-top: -93px; */
+  background-color: #1a0dab;
+  border-radius: 8px;
+  border-style: none;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-family: "Inter UI", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  height: 4rem;
+  padding: 0 1.6rem;
+  text-align: center;
+  text-shadow: rgba(0, 0, 0, 0.25) 0 3px 8px;
+  transition: all .5s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  margin-bottom: 0px;
+}
+
+.timesdropdownanalytics{
+  background-color: #1a0dab;
+  border-radius: 8px;
+  border-style: none;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-family: "Inter UI", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  height: 4rem;
+  padding: 0 1.6rem;
+  text-align: center;
+  text-shadow: rgba(0, 0, 0, 0.25) 0 3px 8px;
+  transition: all .5s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  /* margin-bottom: 0px; */
+  margin: 20px;
+}
+
+.timesdropdownwithoutsnapshot {
+  /* float: right;
+  margin-top: -93px; */
+  background-color: #1a0dab;
+  border-radius: 8px;
+  border-style: none;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-family: "Inter UI", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  /* font-size: 16px; */
+  font-weight: 500;
+  height: 4.5rem;
+  padding: 0 1.6rem;
+  text-align: center;
+  text-shadow: rgba(0, 0, 0, 0.25) 0 3px 8px;
+  transition: all .5s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  margin-bottom: 25px;
+  margin-top: 11px;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+input[class="timeperiodbyrole"] {
+  font-size: "16px"
+}
+
+.copied-message,
+.cleared-message {
+  position: absolute;
+  font-size: 12px;
+  color: green;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  white-space: nowrap;
+}
+
+.copied-message.visible,
+.cleared-message.visible {
+  opacity: 1;
+}
+
+.copyMessages {
+  width: 98%;
+  margin-top: 100px;
+}
+
+.backgroundlightgray {
+  background-color: rgb(211 211 211 / 29%)
+}
+
+.fontcolorblack {
+  color: black;
+}
+
+.reacttable {
+  color: black;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.flex-container-just1item {
+  display: flex;
+  justify-content: center;
+  /* Center horizontally */
+  align-items: center;
+  margin-bottom: -23px;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.lastsaved-yellowmessage {
+  text-align: center;
+  /* background-color: yellow; */
+  font-size: 14px;
+}
+
+#endoutput {
+  background-color: yellow;
+}
+
+.endoutputcenter {
+  background-color: #1a0dab1c;
+  text-align: center;
+  margin: 0px;
+  font-weight: bold;
+  border: 2px solid black;
+  border-top: 0px;
+  padding: 2%;
+  font-size: 24px;
+  /* margin-top: 5px; */
+}
+
+.right-text {
+  text-align: right;
+}
+
+.middle-text {
+  margin: 0 auto;
+  /* Centers the middle text */
+  text-align: center;
+}
+
+.admin-button {
+  position: absolute;
+  /* Position relative to the nearest positioned ancestor */
+  top: 10px;
+  /* Adjust as needed */
+  right: 10px;
+  /* Adjust as needed */
+  padding: 5px 10px;
+  /* Small size */
+  font-size: 12px;
+  /* Small text */
+  background-color: #007bff;
+  /* Blue background */
+  color: white;
+  /* White text */
+  border: none;
+  /* Remove border */
+  border-radius: 5px;
+  /* Rounded corners */
+  cursor: pointer;
+  /* Pointer cursor on hover */
+  transition: background-color 0.3s ease;
+  /* Smooth hover effect */
+  height: 25px;
+}
+
+.admin-button:hover {
+  background-color: #0056b3;
+  /* Darker blue on hover */
+}
+
+.number-picker input {
+  font-size: 18px;
+  text-align: center;
+  width: 100px;
+  appearance: none;
+  /* Removes default styles for better control */
+}
+
+.number-picker input::-webkit-outer-spin-button,
+.number-picker input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.notes {
+  text-align: left;
+  margin-top: 30px;
+  padding-bottom: 15px;
+}
+
+.copymessage {
+  width: 89%;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+}
+
+#compositeScoreCheckbox,
+#compositeScoreCheckboxStatic,
+#originalAlgorithmCheckbox,
+#doNotStoreInDb
+ {
+  width: 24px;
+  margin-left: 10px;
+}
+
+#compositeScoreCheckboxStatic {
+  width: 24px;
+  margin-left: 10px;
+}
+
+#alr,
+#clr {
+  width: 70px;
+  border: 1px solid;
+}
+
+.weightwidth {
+  width: 70px;
+}
+
+.progress-cell {
+  display: flex;
+  justify-content: center;  /* Center horizontally */
+  align-items: center;      /* Center vertically */
+
+  /* height: 59px;   
+  width: 193px; */
+  /* border-top: none;
+  border-left: none; */
+}
+
+.progress-container {
+  width: 140px;        
+  height: 30px;        
+  background-color: #e0e0e0;
+  border-radius: 0; /* No rounded corners */
+  overflow: hidden;
+  box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.2);
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-right: 3%;
+  margin-left: 6%;
+  /* border: 2px solid black; */
+}
+
+.progress-bar {
+  height: 100%;
+  border-radius: 0; /* No rounded corners */
+  background: linear-gradient(to right, #5b56aedd, #1a0dabdd);
+  transition: width 0.4s ease-in-out;
+}
+
+.progress-text {
+  font-size: 16px;
+  /* font-weight: bold; */
+  color: #333;
+  min-width: 35px; /* Ensures space for text */
+  text-align: right;
+  white-space: nowrap;
+  margin-right: 5%;
+}
+
+.spinner {
+  margin: 100px auto;
+  width: 50px;
+  height: 40px;
+  text-align: center;
+  font-size: 10px;
+}
+
+.spinner > div {
+  background-color: #1a0dab;;
+  height: 100%;
+  width: 6px;
+  display: inline-block;
+  
+  -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
+  animation: sk-stretchdelay 1.2s infinite ease-in-out;
+}
+
+.spinner .rect1 {
+  -webkit-animation-delay: -1.2s;
+  animation-delay: -1.2s;
+  margin: 1px;
+  
+}
+
+.spinner .rect2 {
+  -webkit-animation-delay: -1.1s;
+  animation-delay: -1.1s;
+  margin: 1px;
+}
+
+.spinner .rect3 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+  margin: 1px;
+}
+
+.spinner .rect4 {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s;
+  margin: 1px;
+}
+
+.spinner .rect5 {
+  -webkit-animation-delay: -0.8s;
+  animation-delay: -0.8s;
+  margin: 1px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1a0dab;
+  color: #fff;
+  padding: 1rem;
+}
+
+.navbar-left .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
+}
+
+.navbar-center .nav-links {
+  list-style-type: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-center .nav-links li {
+  margin-right: 1rem;
+}
+
+.navbar-center .nav-links a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-right .cart-icon,
+.navbar-right .user-icon {
+  color: #fff;
+  text-decoration: none;
+  margin-left: 1rem;
+  position: relative;
+}
+
+.navbar-right .cart-count {
+  background-color: #f44336;
+  color: #fff;
+  border-radius: 50%;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+}
+
+
+@-webkit-keyframes sk-stretchdelay {
+  0%, 40%, 100% { -webkit-transform: scaleY(0.4) }  
+  20% { -webkit-transform: scaleY(1.0) }
+}
+
+@keyframes sk-stretchdelay {
+  0%, 40%, 100% { 
+    transform: scaleY(0.4);
+    -webkit-transform: scaleY(0.4);
+  }  20% { 
+    transform: scaleY(1.0);
+    -webkit-transform: scaleY(1.0);
+  }
+}
+
+@media (max-width: 1000px) {
+  h1 {
+    font-size: 42px;
+    margin-top: -7px;
+  }
+
+  h2 {
+    font-size: 16px;
+    margin-top: -30px;
+    margin-bottom: 18px;
+  }
+
+  .container {
+    margin-top: 0px;
+  }
+
+  /* fieldset {
+    width: 92%;
+  } */
+
+  select,
+  input,
+  tr,
+  th,
+  span{
+    font-size: 16px;
+    touch-action: manipulation;
+    color: black;
+  }
+
+  button {
+    font-size: 16px;
+    touch-action: manipulation;
+  }
+
+
+  p[class=admissionsorderlastline] {
+    font-size: 10px;
+  }
+
+  tr th,
+  select {
+    font-size: 12px;
+    padding: 3px;
+    color: black;
+    /* white-space: nowrap; */
+  }
+
+  fieldset {
+    width: 94%;
+  }
+
+  #fieldsettocopy {
+    width: 94%;
+  }
+
+  .endoutputcenter {
+    font-size: 16px;
+    padding: 2.5%;
+  }
+
+  .flex-container-just1item {
+    margin-bottom: -45px;
+  }
+
+  .left-text,
+  .boldCopy,
+  p,
+  .progress-text {
+    font-size: 16px;
+  }
+
+
+  .lastsaved-yellowmessage {
+    font-size: 12px;
+  }
+
+  .backgroundcoloryellow {
+    width: 230px;
+  }
+
+  button {
+    font-size: 16px;
+    height: 3.5rem;
+  }
+
+  .bold {
+    font-size: 16px;
+  }
+
+  button.explanation {
+    all: unset;
+    /* float: left; */
+    opacity: 0.6;
+    /* margin: 3px; */
+    font-size: 16px;
+    /* margin-bottom: 6px; */
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  button.explanation:hover {
+    all: unset;
+    /* float: left; */
+    opacity: 1;
+    /* margin: 3px; */
+    font-size: 16px;
+    /* margin-bottom: 6px; */
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .timesdropdown,
+  .timesdropdownwithoutsnapshot {
+    margin-top: 10px;
+    font-size: 16px;
+    height: 3.5rem; 
+  }
+
+  .bold-fields {
+    font-weight: bold;
+    color: black;
+  }
+
+  button.expand {
+    all: unset;
+    float: left;
+    opacity: 0.5;
+    margin: 3px;
+    font-size: 10px;
+    margin-top:17px;
+  
+  }
+  
+  button.expand:hover {
+    all: unset;
+    float: left;
+    opacity: 1;
+    margin: 3px;
+    font-size: 10px;
+    margin-top:17px;
+  
+  }
+  .containerconfig {
+    font-family: 'Poppins', sans-serif;
+    /* width: 92%; */
+    width: 96%;
+    max-width: 80%;
+    padding: 0 40px;
+    /* margin: 0 auto; */
+    margin-top: 20px;
+    text-align: left;
+  }
+  
+
+}
+
