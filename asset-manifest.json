@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/sadq/static/css/main.a94013b3.css",
+    "main.js": "/sadq/static/js/main.6257e827.js",
+    "index.html": "/sadq/index.html",
+    "main.a94013b3.css.map": "/sadq/static/css/main.a94013b3.css.map",
+    "main.6257e827.js.map": "/sadq/static/js/main.6257e827.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a94013b3.css",
+    "static/js/main.6257e827.js"
+  ]
+}
