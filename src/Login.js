@@ -1,16 +1,24 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { app } from "./firebaseConfig";
+import { app, db } from "./firebaseConfig";
+import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
 
 function Login() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const auth = getAuth(app);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [agreed, setAgreed] = useState([false, false, false]);
   const [error, setError] = useState("");
 
-  const navigate = useNavigate();
-  const auth = getAuth(app);
+  useEffect(() => {
+    if (location.state?.email) {
+      setEmail(location.state.email);
+    }
+  }, [location]);
 
   const handleCheckboxChange = (index) => {
     const updated = [...agreed];
@@ -20,23 +28,41 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email.trim(),
+        password
+      );
+      const uid = userCredential.user.uid;
+
+      // Update Firestore: set lastLogin timestamp
+      await updateDoc(doc(db, "users", uid), {
+        lastLogin: serverTimestamp(),
+      });
+
       navigate("/sadq");
     } catch (err) {
+      console.error("Login error:", err.message);
       setError("Invalid credentials. Please try again.");
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white shadow-md rounded-lg p-6">
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 sm:px-6 md:px-8">
+      <div className="w-full max-w-md bg-white shadow-md rounded-lg p-4 sm:p-4 sm:p-6">
         <div className="w-full max-w-sm mx-auto">
-          <h2 className="text-2xl font-bold text-center mb-2">
+          <h2 className="text-xl sm:text-2xl font-bold text-center mb-2">
             Welcome to SADQ – Secure Access Portal
           </h2>
-          <p className="text-sm text-center text-gray-600 mb-6">
+          <p className="text-sm text-center text-gray-600 mb-4 sm:mb-6">
             Secure login to protect data and ensure smooth clinical operations.
           </p>
+
+          {location.state?.success && (
+            <div className="mb-4 text-green-600 text-sm text-center">
+              Account created successfully! Please log in.
+            </div>
+          )}
 
           <div className="mb-4">
             <input
@@ -58,7 +84,16 @@ function Login() {
             />
           </div>
 
-          <div className="space-y-4 text-sm text-gray-800 mb-6">
+          {/* Optional: Uncomment if you implement forgot password
+          <p
+            onClick={() => navigate("/forgot-password")}
+            className="text-sm text-blue-600 underline cursor-pointer mt-2 text-center"
+          >
+            Forgot Password?
+          </p>
+          */}
+
+          <div className="space-y-4 text-sm text-gray-800 mb-4 sm:mb-6">
             {[
               "I acknowledge that I am a clinical user authorized to access the SADQ tool.",
               "I understand that usage may be monitored for operational tracking and improvement purposes.",
@@ -95,7 +130,7 @@ function Login() {
           </div>
 
           <p className="text-xs text-center mt-2 text-gray-500">
-            Don't have an account? {" "}
+            Don't have an account?{" "}
             <span
               onClick={() => navigate("/register")}
               className="text-blue-600 underline hover:text-blue-800 cursor-pointer"
@@ -105,7 +140,7 @@ function Login() {
           </p>
 
           <p className="text-xs text-center mt-4 text-gray-500">
-            Questions? Contact {" "}
+            Questions? Contact{" "}
             <a
               href="mailto:support@genkimd.com"
               className="text-blue-600 underline"

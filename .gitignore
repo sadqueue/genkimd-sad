@@ -42,3 +42,5 @@ log.txt
 logging.txt
 firebase-debug.log
 package-lock.json
+
+.env

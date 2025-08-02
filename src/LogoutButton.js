@@ -9,7 +9,7 @@ function Logout() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      navigate("/"); // Redirect to login page
+      navigate("/login"); // Redirect to login page
     } catch (error) {
       console.error("Logout failed:", error);
     }

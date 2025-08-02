@@ -1,7 +1,8 @@
 // firebaseConfig.js
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
+import { getFirestore } from "firebase/firestore"; // ✅ Use Firestore
 import CONFIG1 from "./config";
+
 const CONFIG = CONFIG1;
 
 const firebaseConfig = {
@@ -14,9 +15,8 @@ const firebaseConfig = {
   measurementId: CONFIG.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
-// Prevent duplicate initialization
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
-const db = getDatabase(app);
+const db = getFirestore(app); // ✅ Use getFirestore instead of getDatabase
 
 export { app, db };
