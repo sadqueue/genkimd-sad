@@ -82,7 +82,13 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+                     <div className="text-right">
+  <a href="/forgot-password" className="text-sm text-blue-600 hover:underline">
+    Forgot password?
+  </a>
+</div>
           </div>
+
 
           {/* Optional: Uncomment if you implement forgot password
           <p
@@ -120,12 +126,8 @@ function Login() {
           <div className="mb-4">
             <button
               onClick={handleLogin}
-              disabled={!agreed.every(Boolean)}
-              className={`w-full font-semibold py-2 rounded transition ${
-                agreed.every(Boolean)
-                  ? "bg-indigo-500 text-white hover:bg-indigo-600"
-                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
-              }`}
+              // disabled={!agreed.every(Boolean)}
+              className={`w-full font-semibold py-2 rounded transition bg-indigo-500 text-white hover:bg-indigo-600`}
             >
               Log In
             </button>
