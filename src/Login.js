@@ -93,23 +93,25 @@ function Login() {
           </p>
           */}
 
-          <div className="space-y-4 text-sm text-gray-800 mb-4 sm:mb-6">
-            {[
-              "I acknowledge that I am a clinical user authorized to access the SADQ tool.",
-              "I understand that usage may be monitored for operational tracking and improvement purposes.",
-              "I agree not to share access credentials or use the tool for unauthorized purposes.",
-            ].map((text, idx) => (
-              <label key={idx} className="flex items-start space-x-3">
-                <input
-                  type="checkbox"
-                  checked={agreed[idx]}
-                  onChange={() => handleCheckboxChange(idx)}
-                  className="mt-1"
-                />
-                <span>{text}</span>
-              </label>
-            ))}
-          </div>
+{/* <div className="space-y-4 text-sm text-gray-800 mb-6">
+  {[
+    "I acknowledge that I am a clinical user authorized to access the SADQ tool.",
+    "I understand that usage may be monitored for operational tracking and improvement purposes.",
+    "I agree not to share access credentials or use the tool for unauthorized purposes.",
+  ].map((text, idx) => (
+    <label key={idx} className="flex items-start gap-3">
+      <input
+        type="checkbox"
+        checked={agreed[idx]}
+        onChange={() => handleCheckboxChange(idx)}
+        className="mt-1"
+      />
+      <span className="break-words">{text}</span>
+    </label>
+  ))}
+</div> */}
+
+
 
           {error && (
             <p className="text-red-500 text-sm text-center mb-4">{error}</p>
