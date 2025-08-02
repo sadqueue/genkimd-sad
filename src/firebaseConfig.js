@@ -1,22 +1,19 @@
-// firebaseConfig.js
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore"; // ✅ Use Firestore
-import CONFIG1 from "./config";
-
-const CONFIG = CONFIG1;
+import { getDatabase } from "firebase/database"; // Or getFirestore if you need Firestore
 
 const firebaseConfig = {
-  apiKey: CONFIG.REACT_APP_FIREBASE_API_KEY,
-  authDomain: CONFIG.REACT_APP_FIREBASE_AUTH_DOMAIN,
-  projectId: CONFIG.REACT_APP_FIREBASE_PROJECT_ID,
-  storageBucket: CONFIG.REACT_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: CONFIG.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-  appId: CONFIG.REACT_APP_FIREBASE_APP_ID,
-  measurementId: CONFIG.REACT_APP_FIREBASE_MEASUREMENT_ID,
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL, // required for Realtime DB
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
-const db = getFirestore(app); // ✅ Use getFirestore instead of getDatabase
+const db = getDatabase(app); // Or getFirestore(app) if using Firestore
 
 export { app, db };
