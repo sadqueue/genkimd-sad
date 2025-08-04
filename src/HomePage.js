@@ -1898,7 +1898,8 @@ export function App({ canEdit }) {
 
     return (
         <div>
-            <div className="header">
+            <div className="headerw-full pb-[1px] text-center bg-[#1a0dab] text-white text-[30px]">
+
 
                 <div className="w-full bg-[#1a0dab] 900 py-4">
                     {/* {canEdit && <Logout />} */}
@@ -1913,9 +1914,11 @@ export function App({ canEdit }) {
                         // </button>
                     )}
                     {/* 👈 Mounted inside the blue header */}
-                    <div className="w-full text-white bg-[#1a0dab] text-center pt-6 pb-4">
-                        <h1 className="text-[86px] font-bold leading-none">S.A.D.Q.</h1>
-                        <h2 className="text-[30px] mt-[0rem] mb-5">Standardized Admissions Distribution Queue</h2>
+                    <div className="w-full text-white bg-[#1a0dab] text-center pt-6 pb-2">
+                    <h1 className="text-[86px] font-bold leading-none max-[1000px]:text-[42px] max-[1000px]:mt-[-7px] mb-[30px]">
+                    S.A.D.Q.</h1>
+                    <h2 className="text-[30px] mt-[0rem] mb-5 max-[1000px]:text-[16px] max-[1000px]:mt-[-30px] max-[1000px]:mb-[18px]">
+                    Standardized Admissions Distribution Queue</h2>
                     </div>
                     {user && (
                         <div className="absolute top-4 right-28 text-white text-sm text-right">
@@ -1939,8 +1942,10 @@ export function App({ canEdit }) {
                         <div className="rect5"></div>
                     </div>
                 </div> :
-                    <div className="container">
-                        <div className="flex-container-just1item">
+                   <div className="container mx-auto w-full max-w-[980px] px-4">
+
+<div className="flex-container-just1item text-base mt-[10px] h-14 sm:text-inherit sm:mt-0 sm:h-auto">
+
                             {timesDropdown()}
                         </div>
                         {!isMobileDevice() && <img
@@ -2010,7 +2015,7 @@ export function App({ canEdit }) {
                                                 </tr>
                                             )}
                                         </thead>
-                                        <tbody className="[&>tr>td]:px-2 [&>tr>td]:py-2 [&>tr>td>input]:text-[24px]">
+                                        <tbody className="[&>tr>td]:px-2 [&>tr>td]:py-2 [&>tr>td>input]:text-[24px] max-[1000px]:24px">
                                             {allAdmissionsDataShifts.shifts &&
                                                 allAdmissionsDataShifts.shifts.length > 0 &&
                                                 allAdmissionsDataShifts.shifts.map((admission, indexx) => {
@@ -2187,15 +2192,6 @@ export function App({ canEdit }) {
 
                         </section>
 
-                        {/* <button className="seedetails" id="seedetails" onClick={() => {
-                        setSeeDetails(!seeDetails);
-                        // setShow1( false);
-                        setShow2(false);
-                        setShow3(false);
-                        setShow4(false);
-                    }
-                    }>{seeDetails ? "Hide Explanation" : "Show Explanation"}</button> */}
-
                         {seeDetails && <fieldset className="notes">
                             <p className="bold">Explanation</p>
 
@@ -2226,22 +2222,6 @@ export function App({ canEdit }) {
                                 }}
                             />
                             <label for="originalAlgorithm">Generate Queue without Storing in Database</label>
-
-                            {/* Part 3: Copy Message */}
-
-                            {/* <button className="explanation"
-                            onClick={() => {
-                                setShow3(!show3);
-                            }}>{!show3 ? "> Copy Messages" : "< Copy Messages"}</button><br></br> */}
-
-                            {/* {show3 && <CopyMessages />} */}
-
-
-                            {/* Part 4: Set Composite Score */}
-                            {/* <button className="explanation" onClick={() => {
-                            setShow4(!show4);
-                        }
-                        }>{!show4 ? "> Set Algorithm" : "< Set Algorithm"}</button><br></br> */}
 
                             {show4 &&
                                 <div>
@@ -2274,9 +2254,9 @@ export function App({ canEdit }) {
                             onClick={(ev) => {
                                 window.open("https://github.com/sadqueue/sad/tree/main", '_blank');
                             }} /> */}
-                            <p className="footer-text">&copy; {new Date().getFullYear()} Genki MD LLC</p>
-                            <p className="footer-text">All rights reserved. Licensed use only.</p>
-                            <p className="footer-text">This tool is for workflow support only. Providers are responsible for final admission and care decisions.</p>
+                            <p className="text-[10px] text-center">&copy; {new Date().getFullYear()} Genki MD LLC</p>
+                            <p className="text-[10px] text-center">All rights reserved. Licensed use only.</p>
+                            <p className="text-[10px] text-center">This tool is for workflow support only. Providers are responsible for final admission and care decisions.</p>
                         </div>
                     </div>
             }
