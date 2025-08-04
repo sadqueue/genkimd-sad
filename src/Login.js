@@ -88,9 +88,16 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
                      <div className="text-right">
-  <a href="/forgot-password" className="text-sm text-blue-600 hover:underline">
+  {/* <a href="/forgot-password" className="text-sm text-blue-600 hover:underline">
     Forgot password?
-  </a>
+  </a> */}
+
+  <Link
+                        to="/forgot-password"
+                        className="text-sm text-blue-700 hover:underline hover:text-blue-900"
+                    >
+                        Forgot password?
+                    </Link>
 </div>
           </div>
 
