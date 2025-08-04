@@ -7,6 +7,7 @@ import Register from "./Register";
 import ForgotPassword from "./ForgotPassword";
 import SadqDashboard from "./SadqDashboard";
 import HomePage from "./HomePage";
+import './App.css'; 
 
 function App() {
   const [user, setUser] = useState(null);
@@ -20,10 +21,11 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/sadq" element={<SadqDashboard />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/sadq" element={<SadqDashboard />} />
+        <Route path="*" element={<div>404 Not Found</div>} />
     </Routes>
   );
 }
