@@ -12,21 +12,8 @@ import {
     CHRONIC_LOAD_RATIO_THRESHOLD_S4,
     NUMBER_OF_ADMISSIONS_CAP,
     ROLES_WITH_DEFAULT_TIMES,
-    CONSTANT_COMPOSITE_5PM,
-    CONSTANT_COMPOSITE_7PM,
-    CONSTANT_COMPOSITE_5PM_N5,
-    CONSTANT_COMPOSITE_7PM_N1,
-    CONSTANT_COMPOSITE_7PM_N2,
-    CONSTANT_COMPOSITE_7PM_N3,
-    CONSTANT_COMPOSITE_7PM_N4,
-    P95_7PM,
-    P95_5PM,
     MINIMIZE_TABLE_STATIC_COMPOSITE_WEB,
     MINIMIZE_TABLE_STATIC_COMPOSITE_MOBILE,
-    ALR_5PM,
-    CLR_5PM,
-    ALR_7PM,
-    CLR_7PM,
     SHOW_ADMISSIONS_WITH_DETAILS
 } from "./constants";
 import snapshotImg from "./images/snapshot.png";
@@ -40,14 +27,18 @@ import {
 } from "./transactionsApi";
 import html2canvas from "html2canvas";
 import { useNavigate } from "react-router-dom";
-import { getAuth, signOut } from "firebase/auth"; // ✅ FIX: Make sure this is imported
-import Logout from './LogoutButton'; // ✅ Correct default import
+import { getAuth, signOut } from "firebase/auth";
+import Logout from './LogoutButton';
+import { Link } from "react-router-dom";
+
 const CONFIG = CONFIG1;
 
-export function App() {
-    // deleteAllTransactions("17:00")
-    // deleteAllTransactions("16:00")
-    // deleteAllTransactions("19:00")
+
+const auth = getAuth();
+const user = auth.currentUser;
+
+export function App({ canEdit }) {
+
     const [allAdmissionsDataShifts, setAllAdmissionsDataShifts] = useState({ startTime: "17:00", shifts: SHIFT_TYPES })
 
     const [seeDetails, setSeeDetails] = useState(false);
@@ -1909,256 +1900,289 @@ export function App() {
         <div>
             <div className="header">
 
-            <div className="bg-blue-900 text-white py-6 px-4 relative">
-        <Logout /> {/* 👈 Mounted inside the blue header */}
-        <h1 className="text-5xl font-bold text-center tracking-widest leading-tight">
-          S.A.D.Q
-        </h1>
-        <p className="text-center text-lg mt-2">
-          Standardized Admissions Distribution Queue
-        </p>
-      </div>
+                <div className="bg-blue-900 text-white py-6 px-4 relative">
+                    {/* {canEdit && <Logout />} */}
+                    {canEdit ? (
+                        <Logout />
+                    ) : (
+                        <button
+                            className="absolute top-4 right-4 bg-white text-blue-900 px-3 py-1 rounded text-sm font-semibold hover:bg-gray-200"
+                            onClick={() => (window.location.href = "/login")}
+                        >
+                            Login
+                        </button>
+                    )}
+                    {/* 👈 Mounted inside the blue header */}
+                    <h1 className="text-5xl font-bold text-center tracking-widest leading-tight">
+                        S.A.D.Q
+                    </h1>
+                    <p className="text-center text-lg mt-2">
+                        Standardized Admissions Distribution Queue
+                    </p>
+                    {user && (
+                        <div className="absolute top-4 right-28 text-white text-sm text-right">
+                            <div className="text-sm text-white">Welcome, <span className="font-semibold">{user?.displayName || 'User'}</span></div>
+                            <div className="text-xs text-white">{user?.email}</div>
+                        </div>
+                    )}
+                </div>
 
-            
-        </div>
+
+            </div>
 
             {
-        loading ? <div className="loading">
-            <div className="spinner">
-                {/* Loading... */}
-                <div className="rect1"></div>
-                <div className="rect2"></div>
-                <div className="rect3"></div>
-                <div className="rect4"></div>
-                <div className="rect5"></div>
-            </div>
-        </div> :
-            <div className="container">
-                <div className="flex-container-just1item">
-                    {timesDropdown()}
-                </div>
-                {!isMobileDevice() && <img
-                    alt="copy button"
-                    className="copybutton"
-                    id="snapshot-button"
-                    src={snapshotImg}
-                    onClick={(ev) => {
-                        takeScreenshot();
+                loading ? <div className="loading">
+                    <div className="spinner">
+                        {/* Loading... */}
+                        <div className="rect1"></div>
+                        <div className="rect2"></div>
+                        <div className="rect3"></div>
+                        <div className="rect4"></div>
+                        <div className="rect5"></div>
+                    </div>
+                </div> :
+                    <div className="container">
+                        <div className="flex-container-just1item">
+                            {timesDropdown()}
+                        </div>
+                        {!isMobileDevice() && <img
+                            alt="copy button"
+                            className="copybutton"
+                            id="snapshot-button"
+                            src={snapshotImg}
+                            onClick={(ev) => {
+                                takeScreenshot();
 
-                    }} />}
-                <button
-                    onClick={() => setOpenTable(!openTable)}
-                    className="expand"
-                >
-                    {openTable ? "Minimize Table ⬆️" : "Expand Table ⬇️"}
-                </button>
-                <table id="screenshotimg">
+                            }} />}
+                        <button
+                            onClick={() => setOpenTable(!openTable)}
+                            className="expand"
+                        >
+                            {openTable ? "Minimize Table ⬆️" : "Expand Table ⬇️"}
+                        </button>
+                        <table id="screenshotimg">
 
-                    <table id="reacttable">
-                        <thead>
-                            {openTable ? (
-                                <tr>
-                                    {MINIMIZE_TABLE_STATIC_COMPOSITE_WEB.map((each, eachIndex) => {
-                                        if (each[0] == "name") {
-                                            return (
-                                                <th className={"th_10percent"} key={eachIndex}>{each[1]}</th>
-                                            );
-                                        } else if (each[0] == "timestamp" || each[0] == "numberOfAdmissions" || each[0] == "chronicLoadRatio") {
-                                            return (
-                                                <th className="th_25percent" key={eachIndex}>{each[1]}</th>
-                                            );
-                                        }
-                                        return (<th key={eachIndex}>{each[1]}</th>);
-                                    })}
-                                </tr>
-                            ) : isMobileDevice() ? (
-                                <tr>
-                                    {MINIMIZE_TABLE_STATIC_COMPOSITE_MOBILE.map((each, eachIndex) => {
-                                        if (each[0] == "name") {
-                                            return (
-                                                <th className="th_10percent" key={eachIndex}>{each[1]}</th>
-                                            );
-                                        } else if (each[0] == "timestamp" || each[0] == "numberOfAdmissions" || each[0] == "chronicLoadRatio") {
-                                            return (
-                                                <th className="th_25percent" key={eachIndex}>{each[1]}</th>
-                                            );
-                                        }
-                                        return (<th key={eachIndex}>{each[1]}</th>);
-                                    })}
-                                </tr>
-                            ) : (
-                                <tr>
-                                    {MINIMIZE_TABLE_STATIC_COMPOSITE_MOBILE.map((each, eachIndex) => {
-                                        if (each[0] == "name") {
-                                            return (
-                                                <th className="th_10percent" key={eachIndex}>{each[1]}</th>
-                                            );
-                                        } else if (each[0] == "timestamp" || each[0] == "numberOfAdmissions" || each[0] == "chronicLoadRatio") {
-                                            return (
-                                                <th className="th_25percent" key={eachIndex}>{each[1]}</th>
-                                            );
-                                        }
-                                        return (<th key={eachIndex}>{each[1]}</th>);
-                                    })}
-                                </tr>
-                            )}
-                        </thead>
-                        <tbody>
-                            {allAdmissionsDataShifts.shifts &&
-                                allAdmissionsDataShifts.shifts.length > 0 &&
-                                allAdmissionsDataShifts.shifts.map((admission, indexx) => {
-                                    let index = 0;
-                                    if (SHOW_ROWS_TABLE[dropdown] && SHOW_ROWS_TABLE[dropdown].includes(admission.name)) {
-                                        index = SHOW_ROWS_TABLE[dropdown].findIndex((user) => user == admission.name);
-                                        return (
-                                            !admission.isStatic && (
-                                                <tr
-                                                    style={SHOW_ROWS_TABLE[dropdown] && SHOW_ROWS_TABLE[dropdown].includes(admission.name) ? {} : { display: "none" }}
-                                                    id={"admissionsDataRow_" + index}
-                                                    className={"admissionsDataRow"}
-                                                    key={admission.admissionsId}
-                                                >
-                                                    <td>
-                                                        <input name={`name_${index}`} className="bold-fields" value={admission.name || ""} type="text" disabled={true} />
-                                                    </td>
-                                                    {/* {openTable && (
+                            <table id="reacttable">
+                                <thead>
+                                    {openTable ? (
+                                        <tr>
+                                            {MINIMIZE_TABLE_STATIC_COMPOSITE_WEB.map((each, eachIndex) => {
+                                                if (each[0] == "name") {
+                                                    return (
+                                                        <th className={"th_10percent"} key={eachIndex}>{each[1]}</th>
+                                                    );
+                                                } else if (each[0] == "timestamp" || each[0] == "numberOfAdmissions" || each[0] == "chronicLoadRatio") {
+                                                    return (
+                                                        <th className="th_25percent" key={eachIndex}>{each[1]}</th>
+                                                    );
+                                                }
+                                                return (<th key={eachIndex}>{each[1]}</th>);
+                                            })}
+                                        </tr>
+                                    ) : isMobileDevice() ? (
+                                        <tr>
+                                            {MINIMIZE_TABLE_STATIC_COMPOSITE_MOBILE.map((each, eachIndex) => {
+                                                if (each[0] == "name") {
+                                                    return (
+                                                        <th className="th_10percent" key={eachIndex}>{each[1]}</th>
+                                                    );
+                                                } else if (each[0] == "timestamp" || each[0] == "numberOfAdmissions" || each[0] == "chronicLoadRatio") {
+                                                    return (
+                                                        <th className="th_25percent" key={eachIndex}>{each[1]}</th>
+                                                    );
+                                                }
+                                                return (<th key={eachIndex}>{each[1]}</th>);
+                                            })}
+                                        </tr>
+                                    ) : (
+                                        <tr>
+                                            {MINIMIZE_TABLE_STATIC_COMPOSITE_MOBILE.map((each, eachIndex) => {
+                                                if (each[0] == "name") {
+                                                    return (
+                                                        <th className="th_10percent" key={eachIndex}>{each[1]}</th>
+                                                    );
+                                                } else if (each[0] == "timestamp" || each[0] == "numberOfAdmissions" || each[0] == "chronicLoadRatio") {
+                                                    return (
+                                                        <th className="th_25percent" key={eachIndex}>{each[1]}</th>
+                                                    );
+                                                }
+                                                return (<th key={eachIndex}>{each[1]}</th>);
+                                            })}
+                                        </tr>
+                                    )}
+                                </thead>
+                                <tbody>
+                                    {allAdmissionsDataShifts.shifts &&
+                                        allAdmissionsDataShifts.shifts.length > 0 &&
+                                        allAdmissionsDataShifts.shifts.map((admission, indexx) => {
+                                            let index = 0;
+                                            if (SHOW_ROWS_TABLE[dropdown] && SHOW_ROWS_TABLE[dropdown].includes(admission.name)) {
+                                                index = SHOW_ROWS_TABLE[dropdown].findIndex((user) => user == admission.name);
+                                                return (
+                                                    !admission.isStatic && (
+                                                        <tr
+                                                            style={SHOW_ROWS_TABLE[dropdown] && SHOW_ROWS_TABLE[dropdown].includes(admission.name) ? {} : { display: "none" }}
+                                                            id={"admissionsDataRow_" + index}
+                                                            className={"admissionsDataRow"}
+                                                            key={admission.admissionsId}
+                                                        >
+                                                            <td>
+                                                                <input name={`name_${index}`} className="bold-fields" value={admission.name || ""} type="text" disabled={true} />
+                                                            </td>
+                                                            {/* {openTable && (
                                                             <td>
                                                                 <input name="shiftTimePeriod" value={admission.shiftTimePeriod} type="text" disabled={true} />
                                                             </td>
                                                         )} */}
-                                                    <td className="usercanedit" tabIndex={-1} onKeyDown={(e) => handleKeyDown(e, index)}>
-                                                        <input
-                                                            id={`timestamp_${index}`}
-                                                            name="timestamp"
-                                                            className="timestamp"
-                                                            value={admission.timestamp || ""}
-                                                            type="time"
-                                                            onChange={(e) => onChange(e, admission.admissionsId)}
-                                                            disabled={admission.isStatic}
-                                                        />
-                                                    </td>
-                                                    <td className="usercanedit cell-with-number" tabIndex={-1} onKeyDown={(e) => handleKeyDown(e, index)}>
-                                                        <span className="small-number">{getXIn2Hours(admission)}</span>
-                                                        <input
-                                                            id={`numberOfAdmissions_${index}`}
-                                                            name="numberOfAdmissions"
-                                                            className="numberOfAdmissions"
-                                                            value={admission.numberOfAdmissions || ""}
-                                                            step="1"
-                                                            type="number"
-                                                            placeholder="---"
-                                                            onChange={(e) => onChange(e, admission.admissionsId)}
-                                                            disabled={admission.isStatic}
-                                                            inputMode="numeric"
-                                                            pattern="[0-9]*"
-                                                        />
-                                                    </td>
-                                                    {openTable &&
-                                                        <td className="backgroundlightgray">
-                                                            <div className="progress-cell">
-                                                                <div className="progress-container">
-                                                                    <div
-                                                                        className="progress-bar"
-                                                                        style={{
-                                                                            width: `${(admission.normalizedAlr || 0) * 100}%`,
-                                                                            background: (admission.normalizedAlr || 0) > 0.5
-                                                                                ? "linear-gradient(to right, #800000, #800000)" /* Red gradient */
-                                                                                : "linear-gradient(to right, #800000, #800000)" /* Green gradient */
-                                                                        }}
-                                                                    />
-                                                                </div>
-                                                                <span className="progress-text">
-                                                                    {admission.normalizedAlr ? Number(admission.normalizedAlr).toFixed(2) : ""}
-                                                                </span>
-                                                            </div>
-                                                        </td>}
-
-                                                    {<td className="backgroundlightgray">
-                                                        <div className="progress-cell">
-                                                            <div className="progress-container">
-                                                                <div
-                                                                    className="progress-bar"
-                                                                    style={{
-                                                                        width: `${(admission.clr || 0) * 100}%`,
-                                                                        background: (admission.clr || 0) > 0.5
-                                                                            ? "linear-gradient(to right, #1a0dab, #1a0dab)" /* Red gradient */
-                                                                            : "linear-gradient(to right,  #1a0dab, #1a0dab)" /* Green gradient */
-                                                                    }}
+                                                            <td className="usercanedit" tabIndex={-1} onKeyDown={(e) => handleKeyDown(e, index)}>
+                                                                <input
+                                                                    id={`timestamp_${index}`}
+                                                                    name="timestamp"
+                                                                    className="timestamp"
+                                                                    value={admission.timestamp || ""}
+                                                                    type="time"
+                                                                    onChange={(e) => onChange(e, admission.admissionsId)}
+                                                                    disabled={admission.isStatic || !canEdit}
                                                                 />
-                                                            </div>
-                                                            <span className="progress-text">
-                                                                {openTable ? Number(admission.clr).toFixed(2) : `${Math.round((admission.clr || 0) * 100)}%`}
-                                                            </span>
-                                                        </div>
-                                                    </td>}
-                                                    {false && openTable && (
-                                                        <td>
-                                                            <input
-                                                                name="numberHoursWorked"
-                                                                value={admission.numberOfHoursWorked || ""}
-                                                                type="number"
-                                                                placeholder="Enter number"
-                                                                disabled={true}
-                                                            />
-                                                        </td>
-                                                    )}
-                                                    {openTable &&
-                                                        <td className="backgroundlightgray">
-                                                            <div className="progress-cell">
-                                                                <div className="progress-container">
-                                                                    <div
-                                                                        className="progress-bar"
-                                                                        style={{
-                                                                            width: `${(admission.composite || 0) * 100}%`,
-                                                                            background: (admission.composite || 0) > 0.5
-                                                                                ? "linear-gradient(to right, #1a0dab, #1a0dab)" /* Red gradient */
-                                                                                : "linear-gradient(to right,  #1a0dab, #1a0dab)" /* Green gradient */
-                                                                        }}
-                                                                    />
+                                                            </td>
+                                                            <td className="usercanedit cell-with-number" tabIndex={-1} onKeyDown={(e) => handleKeyDown(e, index)}>
+                                                                <span className="small-number">{getXIn2Hours(admission)}</span>
+                                                                <input
+                                                                    id={`numberOfAdmissions_${index}`}
+                                                                    name="numberOfAdmissions"
+                                                                    className="numberOfAdmissions"
+                                                                    value={admission.numberOfAdmissions || ""}
+                                                                    step="1"
+                                                                    type="number"
+                                                                    placeholder="---"
+                                                                    onChange={(e) => onChange(e, admission.admissionsId)}
+                                                                    disabled={admission.isStatic || !canEdit}
+                                                                    inputMode="numeric"
+                                                                    pattern="[0-9]*"
+                                                                />
+                                                            </td>
+                                                            {openTable &&
+                                                                <td className="backgroundlightgray">
+                                                                    <div className="progress-cell">
+                                                                        <div className="progress-container">
+                                                                            <div
+                                                                                className="progress-bar"
+                                                                                style={{
+                                                                                    width: `${(admission.normalizedAlr || 0) * 100}%`,
+                                                                                    background: (admission.normalizedAlr || 0) > 0.5
+                                                                                        ? "linear-gradient(to right, #800000, #800000)" /* Red gradient */
+                                                                                        : "linear-gradient(to right, #800000, #800000)" /* Green gradient */
+                                                                                }}
+                                                                            />
+                                                                        </div>
+                                                                        <span className="progress-text">
+                                                                            {admission.normalizedAlr ? Number(admission.normalizedAlr).toFixed(2) : ""}
+                                                                        </span>
+                                                                    </div>
+                                                                </td>}
+
+                                                            {<td className="backgroundlightgray">
+                                                                <div className="progress-cell">
+                                                                    <div className="progress-container">
+                                                                        <div
+                                                                            className="progress-bar"
+                                                                            style={{
+                                                                                width: `${(admission.clr || 0) * 100}%`,
+                                                                                background: (admission.clr || 0) > 0.5
+                                                                                    ? "linear-gradient(to right, #1a0dab, #1a0dab)" /* Red gradient */
+                                                                                    : "linear-gradient(to right,  #1a0dab, #1a0dab)" /* Green gradient */
+                                                                            }}
+                                                                        />
+                                                                    </div>
+                                                                    <span className="progress-text">
+                                                                        {openTable ? Number(admission.clr).toFixed(2) : `${Math.round((admission.clr || 0) * 100)}%`}
+                                                                    </span>
                                                                 </div>
-                                                                <span className="progress-text">
-                                                                    {admission.composite ? Number(admission.composite).toFixed(2) : ""}
-                                                                </span>
-                                                            </div>
-                                                        </td>}
-                                                </tr>
-                                            )
-                                        );
-                                    }
-                                })}
-                        </tbody>
-                    </table>
-                    <p className="endoutputcenter" id="orderofadmissions_title">{`Order of Admits ${lastSaved}`}</p>
-                    {window.location.hostname === 'localhost' && SHOW_ADMISSIONS_WITH_DETAILS && (originalAlgorithm) ?
-                        <p className="endoutputcenter" id="orderofadmissions_output">
-                            {orderOfAdmissions && orderOfAdmissions}
-                        </p>
-                        : hasTwoOccurrences(orderOfAdmissions, "N1") ?
-                            <div>
-                                <p className="endoutputcenter" id="orderofadmissions_output">{array1 ? `(${array1.join(">")})¹` : ""}<br></br>{array2 && `(${array2.join(">")})ⁿ`}</p>
+                                                            </td>}
+                                                            {false && openTable && (
+                                                                <td>
+                                                                    <input
+                                                                        name="numberHoursWorked"
+                                                                        value={admission.numberOfHoursWorked || ""}
+                                                                        type="number"
+                                                                        placeholder="Enter number"
+                                                                        disabled={true}
+                                                                    />
+                                                                </td>
+                                                            )}
+                                                            {openTable &&
+                                                                <td className="backgroundlightgray">
+                                                                    <div className="progress-cell">
+                                                                        <div className="progress-container">
+                                                                            <div
+                                                                                className="progress-bar"
+                                                                                style={{
+                                                                                    width: `${(admission.composite || 0) * 100}%`,
+                                                                                    background: (admission.composite || 0) > 0.5
+                                                                                        ? "linear-gradient(to right, #1a0dab, #1a0dab)" /* Red gradient */
+                                                                                        : "linear-gradient(to right,  #1a0dab, #1a0dab)" /* Green gradient */
+                                                                                }}
+                                                                            />
+                                                                        </div>
+                                                                        <span className="progress-text">
+                                                                            {admission.composite ? Number(admission.composite).toFixed(2) : ""}
+                                                                        </span>
+                                                                    </div>
+                                                                </td>}
+                                                        </tr>
+                                                    )
+                                                );
+                                            }
+                                        })}
+                                </tbody>
+                            </table>
+                            <p className="endoutputcenter" id="orderofadmissions_title">{`Order of Admits ${lastSaved}`}</p>
+                            {window.location.hostname === 'localhost' && SHOW_ADMISSIONS_WITH_DETAILS && (originalAlgorithm) ?
+                                <p className="endoutputcenter" id="orderofadmissions_output">
+                                    {orderOfAdmissions && orderOfAdmissions}
+                                </p>
+                                : hasTwoOccurrences(orderOfAdmissions, "N1") ?
+                                    <div>
+                                        <p className="endoutputcenter" id="orderofadmissions_output">{array1 ? `(${array1.join(">")})¹` : ""}<br></br>{array2 && `(${array2.join(">")})ⁿ`}</p>
+                                    </div>
+                                    : <p className="endoutputcenter" id="orderofadmissions_output">{orderOfAdmissions}</p>
+                            }
+                            <div className="lastsaved-yellowmessage">
+                                {/* {"Generated " + lastSaved } */}
+                                {/* {"This tool is for workflow support only. Providers remain responsible for admissions and patient care decisions."} */}
+
                             </div>
-                            : <p className="endoutputcenter" id="orderofadmissions_output">{orderOfAdmissions}</p>
-                    }
-                    <div className="lastsaved-yellowmessage">
-                        {/* {"Generated " + lastSaved } */}
-                        {/* {"This tool is for workflow support only. Providers remain responsible for admissions and patient care decisions."} */}
+                        </table>
 
-                    </div>
-                </table>
+                        <section>
+                            <button
+                                id="generateQueue"
+                                onClick={(e) => {
+                                    if (canEdit) {
+                                        handleGenerateQueue(e);
+                                        if ("vibrate" in navigator) navigator.vibrate(200);
+                                    }
+                                }}
+                                disabled={!canEdit}
+                                className={`mt-4 px-6 py-2 rounded text-white font-semibold transition 
+    ${canEdit ? "bg-blue-900 hover:bg-blue-800" : "bg-gray-400 cursor-not-allowed"}`}
+                            >
+                                {canEdit ? "Generate Queue" : "Generate Queue"}
+                            </button>
+                            {!canEdit && (
+                                <div className="mt-2 text-center">
+                                    <Link
+                                        to="/login"
+                                        className="text-sm text-blue-700 hover:underline hover:text-blue-900"
+                                    >
+                                        🔐 Log in to generate queue
+                                    </Link>
+                                </div>
+                            )}
 
-                <section>
-                    <button id="generateQueue" onClick={(e) => {
-                        handleGenerateQueue(e);
+                        </section>
 
-                        if ("vibrate" in navigator) {
-                            navigator.vibrate(200);
-                        }
-                    }}>
-                        Generate Queue
-                    </button>
-                </section>
-
-                {/* <button className="seedetails" id="seedetails" onClick={() => {
+                        {/* <button className="seedetails" id="seedetails" onClick={() => {
                         setSeeDetails(!seeDetails);
                         // setShow1( false);
                         setShow2(false);
@@ -2167,90 +2191,90 @@ export function App() {
                     }
                     }>{seeDetails ? "Hide Explanation" : "Show Explanation"}</button> */}
 
-                {seeDetails && <fieldset className="notes">
-                    <p className="bold">Explanation</p>
+                        {seeDetails && <fieldset className="notes">
+                            <p className="bold">Explanation</p>
 
-                    {/* Part 2: Explanation */}
-                    <button className="explanation" onClick={() => {
-                        setShow2(!show2);
-                    }
-                    }>{!show2 ? "> Step by Step" : "< Step by Step"}</button><br></br>
-
-                    {show2 && <div id="stepbystepdetails">
-                        {explanation && explanation.map((line, lineIndex) => {
-                            if (line == "\n") {
-                                return <br></br>
-                            } else {
-                                return <p>{line}</p>
+                            {/* Part 2: Explanation */}
+                            <button className="explanation" onClick={() => {
+                                setShow2(!show2);
                             }
-                        })}<br></br>
-                    </div>}
+                            }>{!show2 ? "> Step by Step" : "< Step by Step"}</button><br></br>
 
-                    <input
-                        id="doNotStoreInDb"
-                        placeholder="Generate Queue without Storing in Database"
-                        className="input-left"
-                        label=""
-                        type="checkbox"
-                        onChange={(e) => {
-                            setDoNotStoreInDb(e.target.checked);
-                        }}
-                    />
-                    <label for="originalAlgorithm">Generate Queue without Storing in Database</label>
+                            {show2 && <div id="stepbystepdetails">
+                                {explanation && explanation.map((line, lineIndex) => {
+                                    if (line == "\n") {
+                                        return <br></br>
+                                    } else {
+                                        return <p>{line}</p>
+                                    }
+                                })}<br></br>
+                            </div>}
 
-                    {/* Part 3: Copy Message */}
+                            <input
+                                id="doNotStoreInDb"
+                                placeholder="Generate Queue without Storing in Database"
+                                className="input-left"
+                                label=""
+                                type="checkbox"
+                                onChange={(e) => {
+                                    setDoNotStoreInDb(e.target.checked);
+                                }}
+                            />
+                            <label for="originalAlgorithm">Generate Queue without Storing in Database</label>
 
-                    {/* <button className="explanation"
+                            {/* Part 3: Copy Message */}
+
+                            {/* <button className="explanation"
                             onClick={() => {
                                 setShow3(!show3);
                             }}>{!show3 ? "> Copy Messages" : "< Copy Messages"}</button><br></br> */}
 
-                    {/* {show3 && <CopyMessages />} */}
+                            {/* {show3 && <CopyMessages />} */}
 
 
-                    {/* Part 4: Set Composite Score */}
-                    {/* <button className="explanation" onClick={() => {
+                            {/* Part 4: Set Composite Score */}
+                            {/* <button className="explanation" onClick={() => {
                             setShow4(!show4);
                         }
                         }>{!show4 ? "> Set Algorithm" : "< Set Algorithm"}</button><br></br> */}
 
-                    {show4 &&
-                        <div>
+                            {show4 &&
+                                <div>
 
-                            <div>
-                                <input
-                                    id="originalAlgorithmCheckbox"
-                                    placeholder="Original Algorithm"
-                                    className="input-left"
-                                    label=""
-                                    type="checkbox"
-                                    onChange={(e) => {
-                                        setOriginalAlgorithm(e.target.checked);
-                                    }}
-                                />
-                                <label for="originalAlgorithm">Original Algorithm v1.0</label>
-                            </div>
+                                    <div>
+                                        <input
+                                            id="originalAlgorithmCheckbox"
+                                            placeholder="Original Algorithm"
+                                            className="input-left"
+                                            label=""
+                                            type="checkbox"
+                                            onChange={(e) => {
+                                                setOriginalAlgorithm(e.target.checked);
+                                            }}
+                                        />
+                                        <label for="originalAlgorithm">Original Algorithm v1.0</label>
+                                    </div>
 
-                        </div>
-                    }
+                                </div>
+                            }
 
 
 
-                </fieldset>}<br></br>
-                <div className="footer">
-                    {/* <img
+                        </fieldset>}<br></br>
+                        <div className="footer">
+                            {/* <img
                             alt="copy button"
                             className="githubbutton"
                             src={githublogo}
                             onClick={(ev) => {
                                 window.open("https://github.com/sadqueue/sad/tree/main", '_blank');
                             }} /> */}
-                    <p className="footer-text">&copy; {new Date().getFullYear()} Genki MD LLC</p>
-                    <p className="footer-text">All rights reserved. Licensed use only.</p>
-                    <p className="footer-text">This tool is for workflow support only. Providers are responsible for final admission and care decisions.</p>
-                </div>
-            </div>
-    }
+                            <p className="footer-text">&copy; {new Date().getFullYear()} Genki MD LLC</p>
+                            <p className="footer-text">All rights reserved. Licensed use only.</p>
+                            <p className="footer-text">This tool is for workflow support only. Providers are responsible for final admission and care decisions.</p>
+                        </div>
+                    </div>
+            }
         </div >
     )
 

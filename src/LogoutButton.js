@@ -7,6 +7,10 @@ function Logout() {
   const auth = getAuth();
 
   const handleLogout = async () => {
+    if (!navigator.onLine) {
+      console.log("Offline mode: skipping Firebase call.");
+      return;
+    }
     try {
       await signOut(auth);
       navigate("/login"); // Redirect to login page
@@ -17,11 +21,11 @@ function Logout() {
 
   return (
     <button
-      onClick={handleLogout}
-      className="absolute right-4 top-4 bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
-    >
-      Logout
-    </button>
+  onClick={handleLogout}
+  className="absolute top-4 right-4 bg-red-500 text-white text-sm px-3 py-1 rounded shadow hover:bg-red-600 transition z-10"
+>
+  Logout
+</button>
   );
 }
 

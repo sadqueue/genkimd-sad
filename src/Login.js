@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { app, db } from "./firebaseConfig";
 import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { Link } from "react-router-dom";
 
 function Login() {
   const navigate = useNavigate();
@@ -70,7 +71,7 @@ function Login() {
               placeholder="Email"
               className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value.trim())}
             />
           </div>
 
@@ -142,6 +143,9 @@ function Login() {
               Register
             </span>
           </p>
+          <p className="mt-2 text-center text-xs text-blue-600 hover:underline">
+  <Link to="/" className="text-blue-600">🔍 View Only Mode</Link>
+</p>
 
           <p className="text-xs text-center mt-4 text-gray-500">
             Questions? Contact{" "}

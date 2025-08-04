@@ -54,6 +54,11 @@ function ForgotPassword() {
 
         {message && <p className="mt-4 text-green-600">{message}</p>}
         {error && <p className="mt-4 text-red-600">{error}</p>}
+        <p className="mt-4 text-center text-sm text-blue-600">
+            <a href="/login" className="hover:underline">
+                ← Back to Login
+            </a>
+            </p>
       </div>
     </div>
   );

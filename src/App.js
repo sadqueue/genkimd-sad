@@ -1,18 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { app } from "./firebaseConfig";
 import Login from "./Login";
 import Register from "./Register";
-import SadqDashboard from "./SadqDashboard";
 import ForgotPassword from "./ForgotPassword";
-import HomePage from "./HomePage"; // Make sure this exists
+import SadqDashboard from "./SadqDashboard";
 
 function App() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const auth = getAuth(app);
+    const unsubscribe = onAuthStateChanged(auth, (u) => setUser(u));
+    return () => unsubscribe();
+  }, []);
+
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />   {/* <-- This is what you're missing */}
+      <Route path="/" element={<SadqDashboard user={user} />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/sadq" element={<SadqDashboard />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="*" element={<div>404 Not Found</div>} />
     </Routes>

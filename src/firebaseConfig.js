@@ -1,5 +1,8 @@
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getDatabase } from "firebase/database"; // Or getFirestore if you need Firestore
+// firebaseConfig.js
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getDatabase, ref, get, child } from "firebase/database"; // ✅
+
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -12,8 +15,8 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
-const db = getDatabase(app); // Or getFirestore(app) if using Firestore
-
-export { app, db };
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+export { app, auth, db };

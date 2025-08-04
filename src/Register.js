@@ -16,9 +16,9 @@ function Register() {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "Doctor",
-    department: "",
-    npi: ""
+    // role: "Doctor",
+    // department: "",
+    // npi: ""
   });
   const [error, setError] = useState("");
   const [agreed, setAgreed] = useState([false, false, false]);
@@ -46,14 +46,14 @@ function Register() {
       const user = userCredential.user;
 
       await updateProfile(user, {
-        displayName: `${form.firstName} ${form.lastName}`,
+        displayName: form.firstName && form.firstName !== "" ? `${form.firstName} ${form.lastName}` : ""
       });
 
       await setDoc(doc(firestore, "users", user.uid), {
         email: form.email,
         role: form.role,
-        department: form.department,
-        npi: form.npi,
+        // department: form.department,
+        // npi: form.npi,
         createdAt: new Date(),
       });
 
@@ -79,7 +79,7 @@ function Register() {
       <div className="w-full max-w-md bg-white shadow-md rounded-lg p-6">
         <h2 className="text-2xl font-bold text-center mb-6">Create an Account</h2>
 
-        {["firstName", "lastName", "email", "password", "confirmPassword", "department", "npi"].map((field, idx) => (
+        {["firstName", "lastName", "email", "password", "confirmPassword"].map((field, idx) => (
           <div className="mb-4" key={idx}>
             <input
               type={field.includes("password") ? "password" : "text"}
@@ -94,7 +94,7 @@ function Register() {
           </div>
         ))}
 
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <select
             name="role"
             className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring"
@@ -106,7 +106,7 @@ function Register() {
             <option>Nurse</option>
             <option>Other</option>
           </select>
-        </div>
+        </div> */}
 
         <div className="space-y-4 text-sm text-gray-800 mb-6">
           {[
