@@ -1904,13 +1904,13 @@ export function App({ canEdit }) {
                     {/* {canEdit && <Logout />} */}
                     {canEdit ? (
                         <Logout />
-                    ) : (
-                        <button
-                            className="absolute top-4 right-4 bg-white text-blue-900 px-3 py-1 rounded text-sm font-semibold hover:bg-gray-200"
-                            onClick={() => (window.location.href = "/login")}
-                        >
-                            Login
-                        </button>
+                    ) : ( ""
+                        // <button
+                        //     className="absolute top-4 right-4 bg-white text-blue-900 px-3 py-1 rounded text-sm font-semibold hover:bg-gray-200"
+                        //     onClick={() => (window.location.href = "/login")}
+                        // >
+                        //     Login
+                        // </button>
                     )}
                     {/* 👈 Mounted inside the blue header */}
                     <h1 className="text-5xl font-bold text-center tracking-widest leading-tight">
