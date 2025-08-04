@@ -1904,7 +1904,7 @@ export function App({ canEdit }) {
                     {/* {canEdit && <Logout />} */}
                     {canEdit ? (
                         <Logout />
-                    ) : ( ""
+                    ) : (""
                         // <button
                         //     className="absolute top-4 right-4 bg-white text-blue-900 px-3 py-1 rounded text-sm font-semibold hover:bg-gray-200"
                         //     onClick={() => (window.location.href = "/login")}
@@ -1913,12 +1913,10 @@ export function App({ canEdit }) {
                         // </button>
                     )}
                     {/* 👈 Mounted inside the blue header */}
-                    <h1 className="text-5xl font-bold text-center tracking-widest leading-tight">
-                        S.A.D.Q
-                    </h1>
-                    <p className="text-center text-lg mt-2">
-                        Standardized Admissions Distribution Queue
-                    </p>
+                    <div className="w-full text-white bg-[#1a0dab] text-center pt-6 pb-4">
+                        <h1 className="text-[86px] font-bold leading-none">S.A.D.Q.</h1>
+                        <h2 className="text-[30px] mt-[0rem] mb-5">Standardized Admissions Distribution Queue</h2>
+                    </div>
                     {user && (
                         <div className="absolute top-4 right-28 text-white text-sm text-right">
                             <div className="text-sm text-white">Welcome, <span className="font-semibold">{user?.displayName || 'User'}</span></div>
@@ -1960,199 +1958,206 @@ export function App({ canEdit }) {
                         >
                             {openTable ? "Minimize Table ⬆️" : "Expand Table ⬇️"}
                         </button>
-                        <table id="screenshotimg">
-
-                            <table id="reacttable">
-                                <thead>
-                                    {openTable ? (
-                                        <tr>
-                                            {MINIMIZE_TABLE_STATIC_COMPOSITE_WEB.map((each, eachIndex) => {
-                                                if (each[0] == "name") {
-                                                    return (
-                                                        <th className={"th_10percent"} key={eachIndex}>{each[1]}</th>
-                                                    );
-                                                } else if (each[0] == "timestamp" || each[0] == "numberOfAdmissions" || each[0] == "chronicLoadRatio") {
-                                                    return (
-                                                        <th className="th_25percent" key={eachIndex}>{each[1]}</th>
-                                                    );
-                                                }
-                                                return (<th key={eachIndex}>{each[1]}</th>);
-                                            })}
-                                        </tr>
-                                    ) : isMobileDevice() ? (
-                                        <tr>
-                                            {MINIMIZE_TABLE_STATIC_COMPOSITE_MOBILE.map((each, eachIndex) => {
-                                                if (each[0] == "name") {
-                                                    return (
-                                                        <th className="th_10percent" key={eachIndex}>{each[1]}</th>
-                                                    );
-                                                } else if (each[0] == "timestamp" || each[0] == "numberOfAdmissions" || each[0] == "chronicLoadRatio") {
-                                                    return (
-                                                        <th className="th_25percent" key={eachIndex}>{each[1]}</th>
-                                                    );
-                                                }
-                                                return (<th key={eachIndex}>{each[1]}</th>);
-                                            })}
-                                        </tr>
-                                    ) : (
-                                        <tr>
-                                            {MINIMIZE_TABLE_STATIC_COMPOSITE_MOBILE.map((each, eachIndex) => {
-                                                if (each[0] == "name") {
-                                                    return (
-                                                        <th className="th_10percent" key={eachIndex}>{each[1]}</th>
-                                                    );
-                                                } else if (each[0] == "timestamp" || each[0] == "numberOfAdmissions" || each[0] == "chronicLoadRatio") {
-                                                    return (
-                                                        <th className="th_25percent" key={eachIndex}>{each[1]}</th>
-                                                    );
-                                                }
-                                                return (<th key={eachIndex}>{each[1]}</th>);
-                                            })}
-                                        </tr>
-                                    )}
-                                </thead>
-                                <tbody>
-                                    {allAdmissionsDataShifts.shifts &&
-                                        allAdmissionsDataShifts.shifts.length > 0 &&
-                                        allAdmissionsDataShifts.shifts.map((admission, indexx) => {
-                                            let index = 0;
-                                            if (SHOW_ROWS_TABLE[dropdown] && SHOW_ROWS_TABLE[dropdown].includes(admission.name)) {
-                                                index = SHOW_ROWS_TABLE[dropdown].findIndex((user) => user == admission.name);
-                                                return (
-                                                    !admission.isStatic && (
-                                                        <tr
-                                                            style={SHOW_ROWS_TABLE[dropdown] && SHOW_ROWS_TABLE[dropdown].includes(admission.name) ? {} : { display: "none" }}
-                                                            id={"admissionsDataRow_" + index}
-                                                            className={"admissionsDataRow"}
-                                                            key={admission.admissionsId}
-                                                        >
-                                                            <td>
-                                                                <input name={`name_${index}`} className="bold-fields" value={admission.name || ""} type="text" disabled={true} />
-                                                            </td>
-                                                            {/* {openTable && (
+                        <div id="screenshotimg" className="w-full flex justify-center px-4">
+                            <div className="overflow-x-auto">
+                                <table id="reacttable" className="w-[900px] table-fixed border border-black text-center">
+                                    <table className="w-full table-fixed border-collapse text-black font-sans text-[20px]" id="reacttable">
+                                        <thead>
+                                            {openTable ? (
+                                                <tr>
+                                                    {MINIMIZE_TABLE_STATIC_COMPOSITE_WEB.map((each, eachIndex) => {
+                                                        if (each[0] == "name") {
+                                                            return (
+                                                                <th className={"th_10percent"} key={eachIndex}>{each[1]}</th>
+                                                            );
+                                                        } else if (each[0] == "timestamp" || each[0] == "numberOfAdmissions" || each[0] == "chronicLoadRatio") {
+                                                            return (
+                                                                <th className="th_25percent" key={eachIndex}>{each[1]}</th>
+                                                            );
+                                                        }
+                                                        return (<th key={eachIndex}>{each[1]}</th>);
+                                                    })}
+                                                </tr>
+                                            ) : isMobileDevice() ? (
+                                                <tr>
+                                                    {MINIMIZE_TABLE_STATIC_COMPOSITE_MOBILE.map((each, eachIndex) => {
+                                                        if (each[0] == "name") {
+                                                            return (
+                                                                <th className="th_10percent" key={eachIndex}>{each[1]}</th>
+                                                            );
+                                                        } else if (each[0] == "timestamp" || each[0] == "numberOfAdmissions" || each[0] == "chronicLoadRatio") {
+                                                            return (
+                                                                <th className="th_25percent" key={eachIndex}>{each[1]}</th>
+                                                            );
+                                                        }
+                                                        return (<th key={eachIndex}>{each[1]}</th>);
+                                                    })}
+                                                </tr>
+                                            ) : (
+                                                <tr>
+                                                    {MINIMIZE_TABLE_STATIC_COMPOSITE_MOBILE.map((each, eachIndex) => {
+                                                        if (each[0] == "name") {
+                                                            return (
+                                                                <th className="th_10percent" key={eachIndex}>{each[1]}</th>
+                                                            );
+                                                        } else if (each[0] == "timestamp" || each[0] == "numberOfAdmissions" || each[0] == "chronicLoadRatio") {
+                                                            return (
+                                                                <th className="th_25percent" key={eachIndex}>{each[1]}</th>
+                                                            );
+                                                        }
+                                                        return (<th key={eachIndex}>{each[1]}</th>);
+                                                    })}
+                                                </tr>
+                                            )}
+                                        </thead>
+                                        <tbody className="[&>tr>td]:px-2 [&>tr>td]:py-2 [&>tr>td>input]:text-[24px]">
+                                            {allAdmissionsDataShifts.shifts &&
+                                                allAdmissionsDataShifts.shifts.length > 0 &&
+                                                allAdmissionsDataShifts.shifts.map((admission, indexx) => {
+                                                    let index = 0;
+                                                    if (SHOW_ROWS_TABLE[dropdown] && SHOW_ROWS_TABLE[dropdown].includes(admission.name)) {
+                                                        index = SHOW_ROWS_TABLE[dropdown].findIndex((user) => user == admission.name);
+                                                        return (
+                                                            !admission.isStatic && (
+                                                                <tr
+                                                                    style={SHOW_ROWS_TABLE[dropdown] && SHOW_ROWS_TABLE[dropdown].includes(admission.name) ? {} : { display: "none" }}
+                                                                    id={"admissionsDataRow_" + index}
+                                                                    className={"admissionsDataRow"}
+                                                                    key={admission.admissionsId}
+                                                                >
+                                                                    <td>
+                                                                        <input className="bold-fields" name={`name_${index}`} value={admission.name || ""} type="text" disabled={true} />
+                                                                    </td>
+                                                                    {/* {openTable && (
                                                             <td>
                                                                 <input name="shiftTimePeriod" value={admission.shiftTimePeriod} type="text" disabled={true} />
                                                             </td>
                                                         )} */}
-                                                            <td className="usercanedit" tabIndex={-1} onKeyDown={(e) => handleKeyDown(e, index)}>
-                                                                <input
-                                                                    id={`timestamp_${index}`}
-                                                                    name="timestamp"
-                                                                    className="timestamp"
-                                                                    value={admission.timestamp || ""}
-                                                                    type="time"
-                                                                    onChange={(e) => onChange(e, admission.admissionsId)}
-                                                                    disabled={admission.isStatic || !canEdit}
-                                                                />
-                                                            </td>
-                                                            <td className="usercanedit cell-with-number" tabIndex={-1} onKeyDown={(e) => handleKeyDown(e, index)}>
-                                                                <span className="small-number">{getXIn2Hours(admission)}</span>
-                                                                <input
-                                                                    id={`numberOfAdmissions_${index}`}
-                                                                    name="numberOfAdmissions"
-                                                                    className="numberOfAdmissions"
-                                                                    value={admission.numberOfAdmissions || ""}
-                                                                    step="1"
-                                                                    type="number"
-                                                                    placeholder="---"
-                                                                    onChange={(e) => onChange(e, admission.admissionsId)}
-                                                                    disabled={admission.isStatic || !canEdit}
-                                                                    inputMode="numeric"
-                                                                    pattern="[0-9]*"
-                                                                />
-                                                            </td>
-                                                            {openTable &&
-                                                                <td className="backgroundlightgray">
-                                                                    <div className="progress-cell">
-                                                                        <div className="progress-container">
-                                                                            <div
-                                                                                className="progress-bar"
-                                                                                style={{
-                                                                                    width: `${(admission.normalizedAlr || 0) * 100}%`,
-                                                                                    background: (admission.normalizedAlr || 0) > 0.5
-                                                                                        ? "linear-gradient(to right, #800000, #800000)" /* Red gradient */
-                                                                                        : "linear-gradient(to right, #800000, #800000)" /* Green gradient */
-                                                                                }}
-                                                                            />
-                                                                        </div>
-                                                                        <span className="progress-text">
-                                                                            {admission.normalizedAlr ? Number(admission.normalizedAlr).toFixed(2) : ""}
-                                                                        </span>
-                                                                    </div>
-                                                                </td>}
-
-                                                            {<td className="backgroundlightgray">
-                                                                <div className="progress-cell">
-                                                                    <div className="progress-container">
-                                                                        <div
-                                                                            className="progress-bar"
-                                                                            style={{
-                                                                                width: `${(admission.clr || 0) * 100}%`,
-                                                                                background: (admission.clr || 0) > 0.5
-                                                                                    ? "linear-gradient(to right, #1a0dab, #1a0dab)" /* Red gradient */
-                                                                                    : "linear-gradient(to right,  #1a0dab, #1a0dab)" /* Green gradient */
-                                                                            }}
+                                                                    <td className="usercanedit" tabIndex={-1} onKeyDown={(e) => handleKeyDown(e, index)}>
+                                                                        <input
+                                                                            id={`timestamp_${index}`}
+                                                                            name="timestamp"
+                                                                            className="timestamp"
+                                                                            value={admission.timestamp || ""}
+                                                                            type="time"
+                                                                            onChange={(e) => onChange(e, admission.admissionsId)}
+                                                                            disabled={admission.isStatic || !canEdit}
                                                                         />
-                                                                    </div>
-                                                                    <span className="progress-text">
-                                                                        {openTable ? Number(admission.clr).toFixed(2) : `${Math.round((admission.clr || 0) * 100)}%`}
-                                                                    </span>
-                                                                </div>
-                                                            </td>}
-                                                            {false && openTable && (
-                                                                <td>
-                                                                    <input
-                                                                        name="numberHoursWorked"
-                                                                        value={admission.numberOfHoursWorked || ""}
-                                                                        type="number"
-                                                                        placeholder="Enter number"
-                                                                        disabled={true}
-                                                                    />
-                                                                </td>
-                                                            )}
-                                                            {openTable &&
-                                                                <td className="backgroundlightgray">
-                                                                    <div className="progress-cell">
-                                                                        <div className="progress-container">
-                                                                            <div
-                                                                                className="progress-bar"
-                                                                                style={{
-                                                                                    width: `${(admission.composite || 0) * 100}%`,
-                                                                                    background: (admission.composite || 0) > 0.5
-                                                                                        ? "linear-gradient(to right, #1a0dab, #1a0dab)" /* Red gradient */
-                                                                                        : "linear-gradient(to right,  #1a0dab, #1a0dab)" /* Green gradient */
-                                                                                }}
-                                                                            />
-                                                                        </div>
-                                                                        <span className="progress-text">
-                                                                            {admission.composite ? Number(admission.composite).toFixed(2) : ""}
-                                                                        </span>
-                                                                    </div>
-                                                                </td>}
-                                                        </tr>
-                                                    )
-                                                );
-                                            }
-                                        })}
-                                </tbody>
-                            </table>
-                            <p className="endoutputcenter" id="orderofadmissions_title">{`Order of Admits ${lastSaved}`}</p>
-                            {window.location.hostname === 'localhost' && SHOW_ADMISSIONS_WITH_DETAILS && (originalAlgorithm) ?
-                                <p className="endoutputcenter" id="orderofadmissions_output">
-                                    {orderOfAdmissions && orderOfAdmissions}
-                                </p>
-                                : hasTwoOccurrences(orderOfAdmissions, "N1") ?
-                                    <div>
-                                        <p className="endoutputcenter" id="orderofadmissions_output">{array1 ? `(${array1.join(">")})¹` : ""}<br></br>{array2 && `(${array2.join(">")})ⁿ`}</p>
-                                    </div>
-                                    : <p className="endoutputcenter" id="orderofadmissions_output">{orderOfAdmissions}</p>
-                            }
-                            <div className="lastsaved-yellowmessage">
-                                {/* {"Generated " + lastSaved } */}
-                                {/* {"This tool is for workflow support only. Providers remain responsible for admissions and patient care decisions."} */}
+                                                                    </td>
+                                                                    <td className="usercanedit cell-with-number" tabIndex={-1} onKeyDown={(e) => handleKeyDown(e, index)}>
+                                                                        <span className="small-number">{getXIn2Hours(admission)}</span>
+                                                                        <input
+                                                                            id={`numberOfAdmissions_${index}`}
+                                                                            name="numberOfAdmissions"
+                                                                            className="numberOfAdmissions"
+                                                                            value={admission.numberOfAdmissions || ""}
+                                                                            step="1"
+                                                                            type="number"
+                                                                            placeholder="---"
+                                                                            onChange={(e) => onChange(e, admission.admissionsId)}
+                                                                            disabled={admission.isStatic || !canEdit}
+                                                                            inputMode="numeric"
+                                                                            pattern="[0-9]*"
+                                                                        />
+                                                                    </td>
+                                                                    {openTable &&
+                                                                        <td className="backgroundlightgray">
+                                                                            <div className="progress-cell">
+                                                                                <div className="progress-container">
+                                                                                    <div
+                                                                                        className="progress-bar"
+                                                                                        style={{
+                                                                                            width: `${(admission.normalizedAlr || 0) * 100}%`,
+                                                                                            background: (admission.normalizedAlr || 0) > 0.5
+                                                                                                ? "linear-gradient(to right, #800000, #800000)" /* Red gradient */
+                                                                                                : "linear-gradient(to right, #800000, #800000)" /* Green gradient */
+                                                                                        }}
+                                                                                    />
+                                                                                </div>
+                                                                                <span className="progress-text">
+                                                                                    {admission.normalizedAlr ? Number(admission.normalizedAlr).toFixed(2) : ""}
+                                                                                </span>
+                                                                            </div>
+                                                                        </td>}
 
+                                                                    {<td className="backgroundlightgray">
+                                                                        <div className="progress-cell">
+                                                                            <div className="progress-container">
+                                                                                <div
+                                                                                    className="progress-bar"
+                                                                                    style={{
+                                                                                        width: `${(admission.clr || 0) * 100}%`,
+                                                                                        background: (admission.clr || 0) > 0.5
+                                                                                            ? "linear-gradient(to right, #1a0dab, #1a0dab)" /* Red gradient */
+                                                                                            : "linear-gradient(to right,  #1a0dab, #1a0dab)" /* Green gradient */
+                                                                                    }}
+                                                                                />
+                                                                            </div>
+                                                                            <span className="progress-text">
+                                                                                {openTable ? Number(admission.clr).toFixed(2) : `${Math.round((admission.clr || 0) * 100)}%`}
+                                                                            </span>
+                                                                        </div>
+                                                                    </td>}
+                                                                    {false && openTable && (
+                                                                        <td>
+                                                                            <input
+                                                                                name="numberHoursWorked"
+                                                                                value={admission.numberOfHoursWorked || ""}
+                                                                                type="number"
+                                                                                placeholder="Enter number"
+                                                                                disabled={true}
+                                                                            />
+                                                                        </td>
+                                                                    )}
+                                                                    {openTable &&
+                                                                        <td className="backgroundlightgray">
+                                                                            <div className="progress-cell">
+                                                                                <div className="progress-container">
+                                                                                    <div
+                                                                                        className="progress-bar"
+                                                                                        style={{
+                                                                                            width: `${(admission.composite || 0) * 100}%`,
+                                                                                            background: (admission.composite || 0) > 0.5
+                                                                                                ? "linear-gradient(to right, #1a0dab, #1a0dab)" /* Red gradient */
+                                                                                                : "linear-gradient(to right,  #1a0dab, #1a0dab)" /* Green gradient */
+                                                                                        }}
+                                                                                    />
+                                                                                </div>
+                                                                                <span className="progress-text">
+                                                                                    {admission.composite ? Number(admission.composite).toFixed(2) : ""}
+                                                                                </span>
+                                                                            </div>
+                                                                        </td>}
+                                                                </tr>
+                                                            )
+                                                        );
+                                                    }
+                                                })}
+                                        </tbody>
+                                    </table>
+                                    <p className="endoutputcenter" id="orderofadmissions_title">{`Order of Admits ${lastSaved}`}</p>
+                                    {window.location.hostname === 'localhost' && SHOW_ADMISSIONS_WITH_DETAILS && (originalAlgorithm) ?
+                                        <p className="endoutputcenter" id="orderofadmissions_output">
+                                            {orderOfAdmissions && orderOfAdmissions}
+                                        </p>
+                                        : hasTwoOccurrences(orderOfAdmissions, "N1") ?
+                                            <div>
+                                                <p className="endoutputcenter" id="orderofadmissions_output">{array1 ? `(${array1.join(">")})¹` : ""}<br></br>{array2 && `(${array2.join(">")})ⁿ`}</p>
+                                            </div>
+                                            : <p className="endoutputcenter" id="orderofadmissions_output">{orderOfAdmissions}</p>
+                                    }
+                                    <div className="lastsaved-yellowmessage">
+                                        {/* {"Generated " + lastSaved } */}
+                                        {/* {"This tool is for workflow support only. Providers remain responsible for admissions and patient care decisions."} */}
+
+                                    </div>
+                                </table>
                             </div>
-                        </table>
+                        </div>
+                        {/* <table id="screenshotimg">
+
+                            
+                        </table> */}
 
                         <section>
                             <button
