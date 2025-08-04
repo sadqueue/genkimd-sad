@@ -52,9 +52,12 @@ function Login() {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 sm:px-6 md:px-8">
       <div className="w-full max-w-md bg-white shadow-md rounded-lg p-4 sm:p-4 sm:p-6">
         <div className="w-full max-w-sm mx-auto">
-          <h2 className="text-xl sm:text-2xl font-bold text-center mb-2">
-            Welcome to SADQ – Secure Access Portal
-          </h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-center">
+  Welcome to SADQ
+</h2>
+<p className="text-sm text-center text-gray-600 mb-4">
+  Secure Access Portal
+</p>
           <p className="text-sm text-center text-gray-600 mb-4 sm:mb-6">
             Secure login to protect data and ensure smooth clinical operations.
           </p>

@@ -1900,7 +1900,7 @@ export function App({ canEdit }) {
         <div>
             <div className="header">
 
-                <div className="bg-blue-900 text-white py-6 px-4 relative">
+                <div className="w-full bg-[#1a0dab] 900 py-4">
                     {/* {canEdit && <Logout />} */}
                     {canEdit ? (
                         <Logout />
@@ -2165,7 +2165,7 @@ export function App({ canEdit }) {
                                 }}
                                 disabled={!canEdit}
                                 className={`mt-4 px-6 py-2 rounded text-white font-semibold transition 
-    ${canEdit ? "bg-blue-900 hover:bg-blue-800" : "bg-gray-400 cursor-not-allowed"}`}
+    ${canEdit ? "bg-[#1a0dab] 900 hover:bg-[#1a0dab] 800" : "bg-gray-400 cursor-not-allowed"}`}
                             >
                                 {canEdit ? "Generate Queue" : "Generate Queue"}
                             </button>
