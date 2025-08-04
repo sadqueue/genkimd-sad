@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { app, db } from "./firebaseConfig";
-import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { Link } from "react-router-dom";
+import { getFirestore, doc, updateDoc, serverTimestamp } from "firebase/firestore";
+
+// const db = getFirestore(app);
 
 function Login() {
   const navigate = useNavigate();
@@ -36,7 +38,6 @@ function Login() {
       );
       const uid = userCredential.user.uid;
 
-      // Update Firestore: set lastLogin timestamp
       await updateDoc(doc(db, "users", uid), {
         lastLogin: serverTimestamp(),
       });

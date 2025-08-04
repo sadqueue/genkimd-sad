@@ -93,10 +93,10 @@ export function App({ canEdit }) {
     useEffect(() => {
         let localDateTime = "";
 
-        if (Object.keys(config).length === 0) {
-            console.log("Config not yet loaded, waiting...");
-            return;
-        }
+        // if (Object.keys(config).length === 0) {
+        //     console.log("Config not yet loaded, waiting...");
+        //     return;
+        // }
 
         const fetchRecentTransaction = async () => {
             function default5PMIfBetween7AMAnd6PM() {
@@ -1921,11 +1921,11 @@ export function App({ canEdit }) {
                     Standardized Admissions Distribution Queue</h2>
                     </div>
                     {user && (
-                        <div className="absolute top-4 right-28 text-white text-sm text-right">
-                            <div className="text-sm text-white">Welcome, <span className="font-semibold">{user?.displayName || 'User'}</span></div>
-                            <div className="text-xs text-white">{user?.email}</div>
-                        </div>
-                    )}
+  <div className="absolute top-4 right-28 text-white text-sm text-right">
+    <div>Welcome, <span className="font-semibold">{user.displayName || 'User'}</span></div>
+    <div className="text-xs text-white">{user.email}</div>
+  </div>
+)}
                 </div>
 
 
@@ -2015,7 +2015,7 @@ export function App({ canEdit }) {
                                                 </tr>
                                             )}
                                         </thead>
-                                        <tbody className="[&>tr>td]:px-2 [&>tr>td]:py-2 [&>tr>td>input]:text-[24px] max-[1000px]:24px">
+                                        <tbody className="[&>tr>td]:px-2 [&>tr>td]:py-2 [&>tr>td>input]:text-[24px]">
                                             {allAdmissionsDataShifts.shifts &&
                                                 allAdmissionsDataShifts.shifts.length > 0 &&
                                                 allAdmissionsDataShifts.shifts.map((admission, indexx) => {

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile, getAuth } from "firebase/auth";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, serverTimestamp } from "firebase/firestore";
 import emailjs from "@emailjs/browser";
 import { app } from "./firebaseConfig";
+// import { serverTimestamp, setDoc, doc } from "firebase/firestore";
+// import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 const auth = getAuth(app);
 const firestore = getFirestore(app);
@@ -35,42 +37,41 @@ function Register() {
 
   const handleRegister = async () => {
     setError("");
-
+  
     if (form.password !== form.confirmPassword) {
-      setError("Passwords do not match.");
+      setError("⚠️ Passwords do not match.");
       return;
     }
-
+  
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, form.email, form.password);
       const user = userCredential.user;
-
-      await updateProfile(user, {
-        displayName: form.firstName && form.firstName !== "" ? `${form.firstName} ${form.lastName}` : ""
-      });
-
+  
+      const displayName =
+        form.firstName?.trim() && form.lastName?.trim()
+          ? `${form.firstName.trim()} ${form.lastName.trim()}`
+          : form.firstName?.trim() || "User";
+  
+      // ✅ Set Firebase display name
+      await updateProfile(user, { displayName });
+  
+      // ✅ Add user doc to Firestore
       await setDoc(doc(firestore, "users", user.uid), {
         email: form.email,
-        role: form.role,
-        // department: form.department,
-        // npi: form.npi,
-        createdAt: new Date(),
+        role: form.role || "viewer",
+        // department: form.department || "",
+        // npi: form.npi || "",
+        createdAt: serverTimestamp(),
+        displayName,
       });
-
-      await emailjs.send(
-        process.env.REACT_APP_EMAILJS_SERVICE_ID,
-        process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
-        {
-          user_name: `${form.firstName} ${form.lastName}`,
-          user_email: form.email,
-          message: "A new user has registered.",
-        },
-        process.env.REACT_APP_EMAILJS_PUBLIC_KEY
-      );
-
+  
       navigate("/login", { state: { email: form.email, success: true } });
     } catch (err) {
-      setError(err.message);
+      if (err.code === "auth/email-already-in-use") {
+        setError("⚠️ An account with this email already exists. Please log in instead.");
+      } else {
+        setError(`❌ Registration failed. ${err.message}`);
+      }
     }
   };
 
@@ -82,7 +83,7 @@ function Register() {
         {["firstName", "lastName", "email", "password", "confirmPassword"].map((field, idx) => (
           <div className="mb-4" key={idx}>
             <input
-              type={field.includes("password") ? "password" : "text"}
+              type={field.toLowerCase().includes("password") ? "password" : "text"}
               name={field}
               placeholder={field
                 .replace(/([A-Z])/g, " $1")
@@ -108,37 +109,30 @@ function Register() {
           </select>
         </div> */}
 
-        <div className="space-y-4 text-sm text-gray-800 mb-6">
-          {[
-            "I acknowledge that I am a clinical user authorized to access the SADQ tool.",
-            "I understand that usage may be monitored for operational tracking and improvement purposes.",
-            "I agree not to share access credentials or use the tool for unauthorized purposes.",
-          ].map((text, idx) => (
-            <label key={idx} className="flex items-start gap-3">
-              <input
-                type="checkbox"
-                checked={agreed[idx]}
-                onChange={() => handleCheckboxChange(idx)}
-                className="mt-1"
-              />
-              <span>{text}</span>
-            </label>
-          ))}
-        </div>
-
+<label className="flex items-start space-x-2">
+  <input
+    type="checkbox"
+    checked={agreed}
+    onChange={() => setAgreed(!agreed)}
+    className="mt-1"
+  />
+  <span className="text-sm text-gray-700">
+    I acknowledge that I am a clinical user authorized to access the SADQ tool.
+    I understand that usage may be monitored for operational tracking and improvement purposes.
+    I agree not to share access credentials or use the tool for unauthorized purposes.
+  </span>
+</label><br></br>
         {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
 
         <button
-          onClick={handleRegister}
-          disabled={!agreed.every(Boolean)}
-          className={`w-full font-semibold py-2 rounded transition ${
-            agreed.every(Boolean)
-              ? "bg-indigo-500 text-white hover:bg-indigo-600"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
-          }`}
-        >
-          Register
-        </button>
+        onClick={handleRegister}
+  disabled={!agreed}
+  className={`mt-4 w-full py-2 rounded text-white font-semibold ${
+    agreed ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-300 cursor-not-allowed"
+  }`}
+>
+  Register
+</button>
 
         <p className="text-xs text-center mt-2 text-gray-500">
           Already have an account?{" "}

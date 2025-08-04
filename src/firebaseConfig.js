@@ -1,7 +1,6 @@
-// firebaseConfig.js
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getDatabase, ref, get, child } from "firebase/database"; // ✅
+import { getFirestore } from "firebase/firestore"; // ✅ not getDatabase
 
 
 const firebaseConfig = {
@@ -18,5 +17,5 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getDatabase(app);
+const db = getFirestore(app); // ✅ Firestore instead of Realtime DB
 export { app, auth, db };

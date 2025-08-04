@@ -19,6 +19,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<SadqDashboard user={user} />} />
+      <Route path="/sadq" element={<SadqDashboard />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />

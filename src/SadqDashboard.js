@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from "react";
 import HomePage from "./HomePage";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { app } from "./firebaseConfig";
+import { auth } from "./firebaseConfig";
 
 function SadqDashboard() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const auth = getAuth(app);
+    const auth = getAuth(); // or import your existing `auth` instance
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+      if (currentUser) {
+        setUser({
+          displayName: currentUser.displayName,
+          email: currentUser.email,
+        });
+      } else {
+        setUser(null);
+      }
     });
-
+  
     return () => unsubscribe();
   }, []);
 

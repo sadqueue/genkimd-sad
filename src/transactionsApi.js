@@ -1,60 +1,70 @@
+// transactionsApi.js (Firestore version)
+
 import {
-  ref,
-  push,
-  get,
-  remove,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
   query,
-  orderByKey,
-  limitToLast,
-  orderByChild,
-  set,
-  getDatabase,
-  update
-} from "firebase/database";
+  limit,
+  orderBy,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  addDoc,
+  where,
+} from "firebase/firestore";
 import { ENV_POINT_TO } from "./constants";
 import { db } from "./firebaseConfig";
-// import { getDatabase, ref, remove } from "firebase/database";
 
-// Fetch all config values from Firebase
+// Helper to recursively remove undefined fields
+const removeUndefinedDeep = (obj) => {
+  if (Array.isArray(obj)) {
+    return obj.map(removeUndefinedDeep);
+  } else if (typeof obj === "object" && obj !== null) {
+    return Object.fromEntries(
+      Object.entries(obj)
+        .filter(([_, v]) => v !== undefined)
+        .map(([k, v]) => [k, removeUndefinedDeep(v)])
+    );
+  }
+  return obj;
+};
+
+
+// Fetch config from Firestore
 export const fetchConfigValues = async () => {
-  const db = getDatabase();
-  const configRef = ref(db, "config");
-
   try {
-    const snapshot = await get(configRef);
-    if (snapshot.exists()) {
-      console.log("Config data fetched:", snapshot.val()); // Debug log
-      return snapshot.val();
+    const configDoc = await getDoc(doc(db, "config", "default"));
+    if (configDoc.exists()) {
+      console.log("Config data fetched:", configDoc.data());
+      return configDoc.data();
     } else {
-      console.warn("No configuration found in Firebase.");
+      console.warn("No configuration found in Firestore.");
       return {};
     }
   } catch (error) {
-    console.error("Error fetching config from Firebase:", error);
+    console.error("Error fetching config from Firestore:", error);
     return {};
   }
 };
 
-// Update a single config value in Firebase
+// Update config value
 export const updateConfigValue = async (key, value) => {
-  const db = getDatabase();
-  const configRef = ref(db, `config/${key}`);
-
   try {
-    await set(configRef, value);
+    await updateDoc(doc(db, "config", "default"), { [key]: value });
     console.log(`${key} updated successfully.`);
   } catch (error) {
     console.error(`Error updating ${key}:`, error);
   }
 };
 
-// Initialize default values if config is empty
+// Initialize config values if missing
 export const initializeConfigValues = async () => {
-  const db = getDatabase();
-  const configRef = ref(db, "config");
-
   try {
-    const snapshot = await get(configRef);
+    const configRef = doc(db, "config", "default");
+    const snapshot = await getDoc(configRef);
+
     if (!snapshot.exists()) {
       const defaultConfig = {
         ALR_5PM: 0.6,
@@ -69,7 +79,7 @@ export const initializeConfigValues = async () => {
         CONSTANT_COMPOSITE_7PM_N3: 0.69,
         CONSTANT_COMPOSITE_7PM_N4: 0.79
       };
-      await set(configRef, defaultConfig);
+      await setDoc(configRef, defaultConfig);
       console.log("Initialized default config values.");
     }
   } catch (error) {
@@ -77,81 +87,56 @@ export const initializeConfigValues = async () => {
   }
 };
 
-export const getFirebaseRef = (startTime, manuallySetEnv = "") => {
-  let transactionsRef = "";
+export const getFirestoreCollectionPath = (startTime) => {
+  const suffix =
+    ENV_POINT_TO === "prod"
+      ? `transactions_${startTime}`
+      : window.location.hostname === "localhost"
+      ? `transactions_local_${startTime}`
+      : `transactions_${startTime}`;
+  return suffix;
+};
 
-  if (manuallySetEnv == "prod" || ENV_POINT_TO =="prod"){
-    transactionsRef = ref(db, `transactions_${startTime}`);
-  } else {
-    if (ENV_POINT_TO == "prod") {
-      transactionsRef = ref(db, `transactions_${startTime}`);
-    } else if (window.location.hostname === 'localhost') {
-      transactionsRef = ref(db, `transactions_local_${startTime}`);
-    } else {
-      transactionsRef = ref(db, `transactions_${startTime}`);
-    }
-  }
-  
-  return transactionsRef
-}
 export const getLast10Transactions = async (admissionsObj) => {
-  const transactionsRef = getFirebaseRef(admissionsObj.startTime);
-  const transactionsQuery = query(transactionsRef, orderByKey(), limitToLast(10));
+  const colPath = getFirestoreCollectionPath(admissionsObj.startTime);
+  const q = query(collection(db, colPath), orderBy("timestamp", "desc"), limit(10));
 
   try {
-    const snapshot = await get(transactionsQuery);
-    if (snapshot.exists()) {
-      const data = snapshot.val();
-      return Object.entries(data).map(([key, value]) => ({
-        id: key,
-        ...value,
-      }));
-    } else {
-      return [];
-    }
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   } catch (error) {
     console.error("Error fetching transactions:", error);
     throw error;
   }
 };
 
-// Function to add a new transaction
 export const addTransaction = async (admissionsObj, order, copyBox) => {
-  const transactionsRef = getFirebaseRef(admissionsObj.startTime);
+  const colPath = getFirestoreCollectionPath(admissionsObj.startTime);
 
   try {
-    const getUserDeviceDetails = () => {
-      return {
-        userAgent: navigator.userAgent,
-        platform: navigator.platform,
-        language: navigator.language,
-      };
-    };
+    const getUserDeviceDetails = () => ({
+      userAgent: navigator.userAgent,
+      platform: navigator.platform,
+      language: navigator.language,
+    });
 
     const timestamp = new Date();
-    const month = timestamp.getMonth() + 1; // Months are zero-based
-    const day = timestamp.getDate();
-    const year = timestamp.getFullYear();
-    let hours = timestamp.getHours();
-    const minutes = String(timestamp.getMinutes()).padStart(2, '0');
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12 || 12; // Convert 0 to 12 for 12-hour format
-
-    const localDateTime = `${month}/${day}/${year} ${hours}:${minutes}${ampm}`;
+    const localDateTime = timestamp.toLocaleString("en-US");
 
     const newTransaction = {
-      timestamp: timestamp,
-      localDateTime: localDateTime,
+      timestamp,
+      localDateTime,
       userDeviceDetails: getUserDeviceDetails(),
-      admissionsObj,
-      order: order ? order : "",
-      deleted: false
-      // copyBox: copyBox ? copyBox : ""
+      admissionsObj: admissionsObj || {},
+      order: order || "",
+      deleted: false,
     };
 
-    // Push the new transaction to the database
-    const newRef = await push(transactionsRef, newTransaction);
-    return { success: true, key: newRef.key }; // Return the unique key
+    // Clean undefined values
+    const cleanedTransaction = removeUndefinedDeep(newTransaction);
+
+    const docRef = await addDoc(collection(db, colPath), cleanedTransaction);
+    return { success: true, key: docRef.id };
   } catch (error) {
     console.error("Error adding transaction:", error);
     return { success: false, error };
@@ -159,26 +144,20 @@ export const addTransaction = async (admissionsObj, order, copyBox) => {
 };
 
 export const getLast50Transactions = async (admissionsObj) => {
-  const transactionsRef = getFirebaseRef(admissionsObj.startTime, "prod");
-  const transactionsQuery = query(transactionsRef, orderByKey(), limitToLast(100));
+  const colPath = getFirestoreCollectionPath(admissionsObj.startTime);
+  const q = query(collection(db, colPath), orderBy("timestamp", "desc"), limit(100));
 
   try {
-    const snapshot = await get(transactionsQuery);
-    if (snapshot.exists()) {
-      const data = snapshot.val();
-
-      return Object.entries(data)
-        .map(([key, value]) => ({
-          id: key,
-          timestamp: value.localDateTime || "N/A",
-          orderOfAdmissions: value.order?.split(">") || [],
-          shifts: value.admissionsObj?.allAdmissionsDataShifts?.shifts || [],
-          deleted: value.deleted || false,
-        }))
-        .filter(transaction => !transaction.deleted); // Properly filter deleted transactions
-    } else {
-      return [];
-    }
+    const snapshot = await getDocs(q);
+    return snapshot.docs
+      .map(doc => ({
+        id: doc.id,
+        timestamp: doc.data().localDateTime || "N/A",
+        orderOfAdmissions: doc.data().order?.split(">") || [],
+        shifts: doc.data().admissionsObj?.allAdmissionsDataShifts?.shifts || [],
+        deleted: doc.data().deleted || false,
+      }))
+      .filter(tx => !tx.deleted);
   } catch (error) {
     console.error("Error fetching transactions:", error);
     throw error;
@@ -186,26 +165,20 @@ export const getLast50Transactions = async (admissionsObj) => {
 };
 
 export const getAllTransactions = async (startTime) => {
-  // Reference to the "5PM" table in Firebase
-  const transactionsRef = getFirebaseRef(startTime);
-  const transactionsQuery = query(transactionsRef, orderByKey());
+  const colPath = getFirestoreCollectionPath(startTime);
+  const q = query(collection(db, colPath), orderBy("timestamp"));
 
   try {
-    const snapshot = await get(transactionsQuery);
-    if (snapshot.exists()) {
-      const data = snapshot.val();
-
-      return Object.entries(data)
-        .map(([key, value]) => ({
-          id: key,
-          timestamp: value.localDateTime || "N/A",
-          orderOfAdmissions: value.order?.split(">") || [],
-          shifts: value.admissionsObj?.allAdmissionsDataShifts?.shifts || [],
-        }))
-        .filter(transaction => !transaction.deleted); // Filter out deleted transactions
-    } else {
-      return [];
-    }
+    const snapshot = await getDocs(q);
+    return snapshot.docs
+      .map(doc => ({
+        id: doc.id,
+        timestamp: doc.data().localDateTime || "N/A",
+        orderOfAdmissions: doc.data().order?.split(">") || [],
+        shifts: doc.data().admissionsObj?.allAdmissionsDataShifts?.shifts || [],
+        deleted: doc.data().deleted || false,
+      }))
+      .filter(tx => !tx.deleted);
   } catch (error) {
     console.error("Error fetching transactions:", error);
     throw error;
@@ -213,28 +186,22 @@ export const getAllTransactions = async (startTime) => {
 };
 
 export const deleteAllTransactions = async (startTime) => {
-  const transactionsRef = getFirebaseRef(startTime);
+  const colPath = getFirestoreCollectionPath(startTime);
+  const snapshot = await getDocs(collection(db, colPath));
+  const deletions = snapshot.docs.map(docSnap => deleteDoc(doc(db, colPath, docSnap.id)));
+
   try {
-    await remove(transactionsRef);
-    console.log("All transactions deleted successfully!");
+    await Promise.all(deletions);
+    console.log("All transactions deleted.");
   } catch (error) {
     console.error("Error deleting all transactions:", error);
   }
 };
 
 export const deleteTransaction = async (startTime, transactionId) => {
+  const colPath = getFirestoreCollectionPath(startTime);
   try {
-    let transactionRef = "";
-
-    if (ENV_POINT_TO == "prod") {
-      transactionRef = ref(db, `transactions_${startTime}/${transactionId}`);
-    } else if (window.location.hostname === 'localhost') {
-      transactionRef = ref(db, `transactions_local_${startTime}/${transactionId}`);
-    } else {
-      transactionRef = ref(db, `transactions_${startTime}/${transactionId}`);
-    }
-
-    await update(transactionRef, { deleted: true });
+    await updateDoc(doc(db, colPath, transactionId), { deleted: true });
     console.log(`Transaction ${transactionId} marked as deleted.`);
   } catch (error) {
     console.error(`Error deleting transaction ${transactionId}:`, error);
@@ -242,39 +209,40 @@ export const deleteTransaction = async (startTime, transactionId) => {
 };
 
 export const hardDeleteTransaction = async (startTime, transactionId) => {
+  const colPath = getFirestoreCollectionPath(startTime);
   try {
-    let transactionRef = "";
-
-    if (ENV_POINT_TO == "prod") {
-      transactionRef = ref(db, `transactions_${startTime}/${transactionId}`);
-    } else if (window.location.hostname === "localhost") {
-      transactionRef = ref(db, `transactions_local_${startTime}/${transactionId}`);
-    } else {
-      transactionRef = ref(db, `transactions_${startTime}/${transactionId}`);
-    }
-
-    await remove(transactionRef); // Completely removes the transaction from the database
-    console.log(`Transaction ${transactionId} has been permanently deleted.`);
+    await deleteDoc(doc(db, colPath, transactionId));
+    console.log(`Transaction ${transactionId} permanently deleted.`);
   } catch (error) {
-    console.error(`Error deleting transaction ${transactionId}:`, error);
+    console.error(`Error hard-deleting transaction ${transactionId}:`, error);
   }
 };
 
 export const getMostRecentTransaction = async (startTime) => {
   try {
-    const transactionsRef = getFirebaseRef(startTime);
-    const recentQuery = query(transactionsRef, orderByChild("timestamp"), limitToLast(1));
+    const colPath = getFirestoreCollectionPath(startTime);
+    const q = query(
+      collection(db, colPath),
+      orderBy("timestamp", "desc"),
+      limit(1)
+    );
 
+    const snapshot = await getDocs(q);
 
-    const snapshot = await get(recentQuery);
-
-
-    if (snapshot && snapshot.exists()) {
-      const data = snapshot.val();
-      const [key, value] = Object.entries(data)[0];
-      return { success: true, transaction: { id: key, ...value } };
+    if (!snapshot.empty) {
+      const doc = snapshot.docs[0];
+      return {
+        success: true,
+        transaction: {
+          id: doc.id,
+          ...doc.data(),
+        },
+      };
     } else {
-      return { success: false, message: "No transactions found." };
+      return {
+        success: false,
+        message: "No transactions found.",
+      };
     }
   } catch (error) {
     console.error("Error fetching the most recent transaction:", error);
@@ -283,26 +251,14 @@ export const getMostRecentTransaction = async (startTime) => {
 };
 
 export const updateTransaction = async (startTime, transactionId, updatedTransaction) => {
+  const colPath = getFirestoreCollectionPath(startTime);
   try {
-    let transactionRef = "";
-
-    if (ENV_POINT_TO == "prod") {
-      transactionRef = ref(db, `transactions_${startTime}/${transactionId}`);
-    } else if (window.location.hostname === 'localhost') {
-      transactionRef = ref(db, `transactions_local_${startTime}/${transactionId}`);
-    } else {
-      transactionRef = ref(db, `transactions_${startTime}/${transactionId}`);
-    }
-
-    // Remove any properties we don't want to update in Firebase
     const { deleted, ...dataToUpdate } = updatedTransaction;
-
-    await update(transactionRef, dataToUpdate);
-    console.log(`Transaction ${transactionId} updated successfully.`);
-    
+    await updateDoc(doc(db, colPath, transactionId), dataToUpdate);
+    console.log(`Transaction ${transactionId} updated.`);
     return { success: true };
   } catch (error) {
     console.error(`Error updating transaction ${transactionId}:`, error);
-    throw error; // Rethrow so the UI can handle it
+    throw error;
   }
 };
