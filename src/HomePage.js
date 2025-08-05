@@ -30,7 +30,7 @@ import { useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 import Logout from './LogoutButton';
 import { Link } from "react-router-dom";
-
+import "./App.css";
 const CONFIG = CONFIG1;
 
 
